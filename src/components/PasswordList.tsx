@@ -15,6 +15,7 @@ import {
 interface PasswordListProps {
   groups: PasswordGroup[];
   onUpdateStatus: (groupUrl: string, entryIndex: number, status: PasswordEntry['status']) => void;
+  onBulkUpdateStatus: (groupUrl: string, status: PasswordEntry['status']) => void;
 }
 
 interface PasswordRevealState {
@@ -176,39 +177,39 @@ const PasswordEntryItem = memo(({
           {isRevealed && <PasswordStrength password={entry.password} />}
         </div>
         
-        <div className="flex space-x-1 ml-4">
+        <div className="flex space-x-2 ml-4">
           <button
             onClick={() => onUpdateStatus(groupUrl, index, 'keep')}
-            className={`p-2 rounded-lg transition-all duration-200 ${
+            className={`px-3 py-1.5 rounded-lg transition-all duration-200 flex items-center space-x-2 ${
               entry.status === 'keep' 
                 ? 'bg-green-100 text-green-700' 
                 : 'hover:bg-gray-100 text-gray-600'
             }`}
-            title="Keep"
           >
-            <CheckIcon className="w-5 h-5" />
+            <CheckIcon className="w-4 h-4" />
+            <span>Keep</span>
           </button>
           <button
             onClick={() => onUpdateStatus(groupUrl, index, 'delete')}
-            className={`p-2 rounded-lg transition-all duration-200 ${
+            className={`px-3 py-1.5 rounded-lg transition-all duration-200 flex items-center space-x-2 ${
               entry.status === 'delete' 
                 ? 'bg-red-100 text-red-700' 
                 : 'hover:bg-gray-100 text-gray-600'
             }`}
-            title="Delete"
           >
-            <XMarkIcon className="w-5 h-5" />
+            <XMarkIcon className="w-4 h-4" />
+            <span>Delete</span>
           </button>
           <button
             onClick={() => onUpdateStatus(groupUrl, index, 'review')}
-            className={`p-2 rounded-lg transition-all duration-200 ${
+            className={`px-3 py-1.5 rounded-lg transition-all duration-200 flex items-center space-x-2 ${
               entry.status === 'review' 
                 ? 'bg-yellow-100 text-yellow-700' 
                 : 'hover:bg-gray-100 text-gray-600'
             }`}
-            title="Mark for review"
           >
-            <QuestionMarkCircleIcon className="w-5 h-5" />
+            <QuestionMarkCircleIcon className="w-4 h-4" />
+            <span>Review Later</span>
           </button>
         </div>
       </div>
@@ -261,12 +262,14 @@ const GroupHeader = memo(({
   group, 
   isExpanded, 
   onToggle,
-  onVisitSite
+  onVisitSite,
+  onBulkUpdate
 }: {
   group: PasswordGroup;
   isExpanded: boolean;
   onToggle: () => void;
   onVisitSite: (url: string) => void;
+  onBulkUpdate: (status: PasswordEntry['status']) => void;
 }) => {
   // Count passwords by status
   const stats = {
@@ -334,10 +337,35 @@ const GroupHeader = memo(({
         </div>
       </div>
 
-      <div 
-        className={`transform transition-transform duration-150 ease-out ${isExpanded ? 'rotate-180' : ''}`}
-      >
-        <ArrowDownIcon className="w-5 h-5 text-gray-500" />
+      <div className="flex items-center space-x-2">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            if (confirm(`Are you sure you want to keep ALL passwords for ${group.url}? This will mark them as safe to keep.`)) {
+              onBulkUpdate('keep');
+            }
+          }}
+          className="px-3 py-1.5 text-sm rounded-lg bg-green-50 text-green-700 hover:bg-green-100 transition-colors"
+        >
+          Keep All
+        </button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            if (confirm(`⚠️ Warning: This will mark ALL passwords for ${group.url} for deletion. Are you sure?`)) {
+              onBulkUpdate('delete');
+            }
+          }}
+          className="px-3 py-1.5 text-sm rounded-lg bg-red-50 text-red-700 hover:bg-red-100 transition-colors"
+        >
+          Delete All
+        </button>
+        <button
+          onClick={onToggle}
+          className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+        >
+          <ArrowDownIcon className={`w-5 h-5 text-gray-500 transform transition-transform duration-150 ${isExpanded ? 'rotate-180' : ''}`} />
+        </button>
       </div>
     </div>
   );
@@ -345,10 +373,30 @@ const GroupHeader = memo(({
 
 GroupHeader.displayName = 'GroupHeader';
 
-export default function PasswordList({ groups, onUpdateStatus }: PasswordListProps) {
+// Add new search component at the top
+const SearchBar = ({ onSearch }: { onSearch: (query: string) => void }) => (
+  <div className="mb-4">
+    <div className="relative">
+      <input
+        type="text"
+        placeholder="Search websites..."
+        className="w-full px-4 py-2 pl-10 bg-white rounded-lg border focus:ring-2 focus:ring-blue-500/20 transition-all"
+        onChange={(e) => onSearch(e.target.value)}
+      />
+      <div className="absolute left-3 top-1/2 -translate-y-1/2">
+        <svg className="w-4 h-4 text-gray-400" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+          <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </div>
+    </div>
+  </div>
+);
+
+export default function PasswordList({ groups, onUpdateStatus, onBulkUpdateStatus }: PasswordListProps) {
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
   const [revealedPassword, setRevealedPassword] = useState<PasswordRevealState | null>(null);
   const [animation, setAnimation] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
   
   // Auto-hide password after 30 seconds for security
   useEffect(() => {
@@ -395,9 +443,16 @@ export default function PasswordList({ groups, onUpdateStatus }: PasswordListPro
   // Sort groups by number of entries (most passwords first)
   const sortedGroups = [...groups].sort((a, b) => b.entries.length - a.entries.length);
 
+  // Filter groups based on search query
+  const filteredGroups = sortedGroups.filter(group => 
+    group.url.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="space-y-4">
-      {sortedGroups.map((group) => (
+      <SearchBar onSearch={setSearchQuery} />
+      
+      {filteredGroups.map((group) => (
         <div 
           key={group.url} 
           className="bg-white rounded-xl shadow p-0 transition-all duration-200 hover:shadow-md overflow-hidden"
@@ -407,6 +462,7 @@ export default function PasswordList({ groups, onUpdateStatus }: PasswordListPro
             isExpanded={expandedGroups.has(group.url)}
             onToggle={() => toggleGroup(group.url)}
             onVisitSite={visitSite}
+            onBulkUpdate={(status) => onBulkUpdateStatus(group.url, status)}
           />
 
           <div 
