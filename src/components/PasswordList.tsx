@@ -392,11 +392,62 @@ const SearchBar = ({ onSearch }: { onSearch: (query: string) => void }) => (
   </div>
 );
 
+// Add new type for sort options
+type SortOption = 'alphabetical' | 'password-count' | 'last-used' | 'security-risk';
+
+// Add new sort controls component
+const SortControls = ({ onSortChange, currentSort }: { 
+  onSortChange: (sort: SortOption) => void;
+  currentSort: SortOption;
+}) => (
+  <div className="flex items-center space-x-2 mb-4">
+    <label className="text-sm text-gray-600">Sort by:</label>
+    <select
+      value={currentSort}
+      onChange={(e) => onSortChange(e.target.value as SortOption)}
+      className="px-3 py-1.5 rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+    >
+      <option value="alphabetical">Domain Name (A-Z)</option>
+      <option value="password-count">Number of Passwords</option>
+      <option value="last-used">Last Used</option>
+      <option value="security-risk">Security Risk</option>
+    </select>
+  </div>
+);
+
+// Add progress indicator component
+const ProgressIndicator = ({ groups }: { groups: PasswordGroup[] }) => {
+  const total = groups.reduce((sum, group) => sum + group.entries.length, 0);
+  const reviewed = groups.reduce((sum, group) => 
+    sum + group.entries.filter(entry => entry.status && entry.status !== 'review').length, 
+  0);
+  const percentage = total > 0 ? Math.round((reviewed / total) * 100) : 0;
+
+  return (
+    <div className="mb-4">
+      <div className="flex justify-between items-center mb-1">
+        <span className="text-sm text-gray-600">Review Progress</span>
+        <span className="text-sm font-medium text-gray-900">{percentage}%</span>
+      </div>
+      <div className="w-full bg-gray-200 rounded-full h-2">
+        <div 
+          className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+          style={{ width: `${percentage}%` }}
+        />
+      </div>
+      <div className="flex justify-between items-center mt-1 text-xs text-gray-500">
+        <span>{reviewed} of {total} passwords reviewed</span>
+      </div>
+    </div>
+  );
+};
+
 export default function PasswordList({ groups, onUpdateStatus, onBulkUpdateStatus }: PasswordListProps) {
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
   const [revealedPassword, setRevealedPassword] = useState<PasswordRevealState | null>(null);
   const [animation, setAnimation] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [sortOption, setSortOption] = useState<SortOption>('alphabetical');
   
   // Auto-hide password after 30 seconds for security
   useEffect(() => {
@@ -440,17 +491,53 @@ export default function PasswordList({ groups, onUpdateStatus, onBulkUpdateStatu
     setAnimation(enable);
   }, []);
 
-  // Sort groups by number of entries (most passwords first)
-  const sortedGroups = [...groups].sort((a, b) => b.entries.length - a.entries.length);
+  // Enhanced sorting function
+  const getSortedGroups = useCallback((groups: PasswordGroup[]) => {
+    return [...groups].sort((a, b) => {
+      switch (sortOption) {
+        case 'alphabetical':
+          return a.url.localeCompare(b.url);
+        case 'password-count':
+          return b.entries.length - a.entries.length;
+        case 'last-used':
+          const aLastUsed = Math.max(...a.entries.map(e => e.timeLastUsed ? new Date(e.timeLastUsed).getTime() : 0));
+          const bLastUsed = Math.max(...b.entries.map(e => e.timeLastUsed ? new Date(e.timeLastUsed).getTime() : 0));
+          return bLastUsed - aLastUsed;
+        case 'security-risk':
+          // Calculate average password strength for each group
+          const getAvgStrength = (group: PasswordGroup) => {
+            return group.entries.reduce((sum, entry) => {
+              let score = 0;
+              const pwd = entry.password;
+              if (pwd.length > 12) score += 2;
+              else if (pwd.length > 8) score += 1;
+              if (/[A-Z]/.test(pwd)) score += 1;
+              if (/[a-z]/.test(pwd)) score += 1;
+              if (/[0-9]/.test(pwd)) score += 1;
+              if (/[^A-Za-z0-9]/.test(pwd)) score += 1;
+              return sum + score;
+            }, 0) / group.entries.length;
+          };
+          return getAvgStrength(a) - getAvgStrength(b); // Weakest first
+        default:
+          return 0;
+      }
+    });
+  }, [sortOption]);
 
-  // Filter groups based on search query
-  const filteredGroups = sortedGroups.filter(group => 
-    group.url.toLowerCase().includes(searchQuery.toLowerCase())
+  // Filter and sort groups
+  const filteredGroups = getSortedGroups(
+    groups.filter(group => group.url.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   return (
     <div className="space-y-4">
-      <SearchBar onSearch={setSearchQuery} />
+      <div className="flex justify-between items-start mb-4">
+        <SearchBar onSearch={setSearchQuery} />
+        <SortControls onSortChange={setSortOption} currentSort={sortOption} />
+      </div>
+      
+      <ProgressIndicator groups={groups} />
       
       {filteredGroups.map((group) => (
         <div 
