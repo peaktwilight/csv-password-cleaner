@@ -1,14 +1,20 @@
 import { useState } from 'react';
 import { PasswordGroup, PasswordEntry } from '@/types/password';
-import { ArrowTopRightOnSquareIcon as ExternalLinkIcon, CheckIcon, XMarkIcon, QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
+import { ArrowTopRightOnSquareIcon as ExternalLinkIcon, CheckIcon, XMarkIcon, QuestionMarkCircleIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 
 interface PasswordListProps {
   groups: PasswordGroup[];
   onUpdateStatus: (groupUrl: string, entryIndex: number, status: PasswordEntry['status']) => void;
 }
 
+interface PasswordRevealState {
+  groupUrl: string;
+  index: number;
+}
+
 export default function PasswordList({ groups, onUpdateStatus }: PasswordListProps) {
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
+  const [revealedPassword, setRevealedPassword] = useState<PasswordRevealState | null>(null);
 
   const toggleGroup = (url: string) => {
     setExpandedGroups(prev => {
@@ -37,6 +43,20 @@ export default function PasswordList({ groups, onUpdateStatus }: PasswordListPro
   const visitSite = (url: string) => {
     const fullUrl = url.startsWith('http') ? url : `https://${url}`;
     window.open(fullUrl, '_blank');
+  };
+
+  const togglePasswordVisibility = (groupUrl: string, index: number) => {
+    if (revealedPassword?.groupUrl === groupUrl && revealedPassword?.index === index) {
+      setRevealedPassword(null);
+    } else {
+      setRevealedPassword({ groupUrl, index });
+      // Auto-hide password after 30 seconds for security
+      setTimeout(() => {
+        setRevealedPassword(prev => 
+          prev?.groupUrl === groupUrl && prev?.index === index ? null : prev
+        );
+      }, 30000);
+    }
   };
 
   return (
@@ -86,6 +106,37 @@ export default function PasswordList({ groups, onUpdateStatus }: PasswordListPro
                     <div className="space-y-1">
                       <p className="font-medium text-gray-900">{entry.username}</p>
                       <p className="text-sm text-gray-600">{entry.name}</p>
+                      <div className="flex items-center mt-2 group/password relative">
+                        <div className="relative flex items-center">
+                          <input
+                            type={revealedPassword?.groupUrl === group.url && revealedPassword?.index === index ? 'text' : 'password'}
+                            value={entry.password}
+                            readOnly
+                            className="bg-gray-50 px-3 py-1.5 pr-10 rounded-lg text-sm font-mono border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                          />
+                          <button
+                            onClick={() => togglePasswordVisibility(group.url, index)}
+                            className="absolute right-2 p-1 rounded-full hover:bg-gray-200 transition-colors duration-200"
+                            title={revealedPassword?.groupUrl === group.url && revealedPassword?.index === index ? 'Hide password' : 'Show password'}
+                          >
+                            {revealedPassword?.groupUrl === group.url && revealedPassword?.index === index ? (
+                              <EyeSlashIcon className="w-4 h-4 text-gray-600" />
+                            ) : (
+                              <EyeIcon className="w-4 h-4 text-gray-600" />
+                            )}
+                          </button>
+                        </div>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            visitSite(group.url);
+                          }}
+                          className="ml-2 p-1.5 rounded-full opacity-0 group-hover/password:opacity-100 transition-opacity duration-200 hover:bg-gray-100"
+                          title="Visit website to test password"
+                        >
+                          <ExternalLinkIcon className="w-4 h-4 text-blue-600" />
+                        </button>
+                      </div>
                     </div>
                     <div className="flex space-x-2">
                       <button
