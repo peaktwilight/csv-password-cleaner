@@ -9,7 +9,7 @@ import {
   EyeSlashIcon,
   ArrowDownIcon,
   ShieldCheckIcon,
-  PencilIcon
+  ClipboardIcon
 } from '@heroicons/react/24/outline';
 
 interface PasswordListProps {
@@ -161,7 +161,7 @@ const PasswordEntryItem = memo(({
                   className="p-1.5 rounded-full hover:bg-gray-200 transition-colors duration-200"
                   title="Copy password"
                 >
-                  <PencilIcon className="w-4 h-4 text-gray-600" />
+                  <ClipboardIcon className="w-4 h-4 text-gray-600" />
                 </button>
               </div>
             </div>
