@@ -1,31 +1,58 @@
 {
-  "name": "pass-cleaner",
-  "version": "0.1.0",
-  "private": true,
+  "name": "chrome-csv-password-cleaner",
+  "version": "1.0.0",
+  "private": false,
+  "description": "A secure, privacy-focused web tool for organizing and cleaning up password exports from Chromium-based browsers",
+  "keywords": [
+    "password-manager",
+    "chrome-passwords",
+    "brave-passwords",
+    "edge-passwords",
+    "password-organizer",
+    "csv-parser",
+    "privacy-tools",
+    "security-tools",
+    "chromium",
+    "nextjs",
+    "typescript",
+    "tailwindcss",
+    "client-side",
+    "zero-server"
+  ],
+  "author": "Peak Twilight",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/peaktwilight/chrome-csv-password-cleaner.git"
+  },
+  "bugs": {
+    "url": "https://github.com/peaktwilight/chrome-csv-password-cleaner/issues"
+  },
+  "homepage": "https://github.com/peaktwilight/chrome-csv-password-cleaner#readme",
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
-    "@headlessui/react": "^2.2.0",
-    "@heroicons/react": "^2.2.0",
-    "@types/papaparse": "^5.3.15",
-    "next": "15.2.1",
-    "papaparse": "^5.5.2",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "@headlessui/react": "^1.7.18",
+    "@heroicons/react": "^2.1.1",
+    "next": "14.1.0",
+    "papaparse": "^5.4.1",
+    "react": "^18",
+    "react-dom": "^18"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
-    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "15.2.1",
-    "tailwindcss": "^4",
+    "@types/papaparse": "^5.3.14",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10.0.1",
+    "eslint": "^8",
+    "eslint-config-next": "14.1.0",
+    "postcss": "^8",
+    "tailwindcss": "^3.3.0",
     "typescript": "^5"
   }
 }

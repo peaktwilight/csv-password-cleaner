@@ -97,12 +97,21 @@ export default function Home() {
       <div className="bg-gradient-to-b from-blue-600 to-blue-800 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <div className="text-center">
+            <a
+              href="https://github.com/peaktwilight/chrome-csv-password-cleaner"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/30 rounded-full mb-8 hover:bg-blue-500/40 transition-colors duration-200"
+            >
+              <CodeBracketIcon className="w-5 h-5" />
+              <span className="text-sm font-medium">100% Open Source on GitHub</span>
+            </a>
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
               Password Cleaner
             </h1>
             <p className="mt-6 text-xl text-blue-100 max-w-3xl mx-auto">
-              Securely organize and clean up your password exports from Chrome and Brave browsers.
-              All processing happens locally in your browser.
+              Securely organize and clean up your password exports from Chrome, Brave, Edge, and other Chromium-based browsers.
+              All processing happens locally in your browser for maximum privacy.
             </p>
             
             <div className="mt-12 flex flex-col sm:flex-row gap-6 justify-center items-center">

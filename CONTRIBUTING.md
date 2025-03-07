@@ -1,49 +1,59 @@
 # Contributing to Password Cleaner
 
-First off, thank you for considering contributing to Password Cleaner! It's people like you that make Password Cleaner such a great tool.
+![100% Open Source](https://img.shields.io/badge/Open%20Source-100%25-blue)
+![MIT License](https://img.shields.io/badge/License-MIT-green)
+![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
 
-## Code of Conduct
+Password Cleaner is a 100% open-source tool that helps users manage and clean up their password exports from Chromium-based browsers (Chrome, Brave, Edge, Opera, etc.). Our mission is to provide a secure, private, and efficient way to organize browser passwords while keeping all processing local.
 
-By participating in this project, you are expected to uphold our Code of Conduct:
+## 🌟 Why Contribute?
 
-- Use welcoming and inclusive language
-- Be respectful of differing viewpoints and experiences
-- Gracefully accept constructive criticism
-- Focus on what is best for the community
-- Show empathy towards other community members
+- **Impact**: Help thousands of users manage their passwords securely
+- **Privacy-First**: Build tools that respect user privacy
+- **Open Source**: Join a transparent and collaborative development process
+- **Learning**: Work with modern web technologies and security practices
 
-## How Can I Contribute?
+## 🤝 Code of Conduct
+
+We are committed to providing a welcoming and inspiring community for all. Our Code of Conduct includes:
+
+- Using welcoming and inclusive language
+- Being respectful of differing viewpoints and experiences
+- Gracefully accepting constructive criticism
+- Focusing on what is best for the community
+- Showing empathy towards other community members
+
+## 🚀 How Can I Contribute?
 
 ### Reporting Bugs
 
-Before creating bug reports, please check the existing issues as you might find out that you don't need to create one. When you are creating a bug report, please include as many details as possible:
+Before creating bug reports, please check [existing issues](https://github.com/peaktwilight/chrome-csv-password-cleaner/issues) to avoid duplicates. When creating a bug report, please include:
 
-* Use a clear and descriptive title
-* Describe the exact steps which reproduce the problem
-* Provide specific examples to demonstrate the steps
-* Describe the behavior you observed after following the steps
-* Explain which behavior you expected to see instead and why
-* Include screenshots if possible
-* Include your environment details (OS, browser version, etc.)
+* A clear and descriptive title
+* Detailed steps to reproduce the problem
+* Specific examples and screenshots if applicable
+* Your environment details (OS, browser version, etc.)
+* Any relevant error messages or logs
 
 ### Suggesting Enhancements
 
-If you have a suggestion for a new feature or enhancement, first check the existing issues and pull requests to see if it has already been proposed. If it hasn't, you can create a new issue:
+Have an idea? First check our [existing issues](https://github.com/peaktwilight/chrome-csv-password-cleaner/issues) and [pull requests](https://github.com/peaktwilight/chrome-csv-password-cleaner/pulls). For new suggestions:
 
-* Use a clear and descriptive title
-* Provide a detailed description of the suggested enhancement
-* Explain why this enhancement would be useful
-* List some examples of how it would be used
+* Provide a clear and descriptive title
+* Explain the step-by-step workflow of your suggestion
+* Include mockups or examples if possible
+* Describe the value this would add for users
 
 ### Pull Requests
 
 1. Fork the repo and create your branch from `main`
-2. If you've added code that should be tested, add tests
-3. Ensure the test suite passes
-4. Make sure your code follows the existing code style
-5. Write a good commit message
+2. Install dependencies and ensure everything works locally
+3. Make your changes following our code style
+4. Add tests if applicable
+5. Update documentation as needed
+6. Submit a well-documented pull request
 
-#### Local Development
+## 💻 Development Setup
 
 1. Clone the repository:
 ```bash
@@ -61,44 +71,61 @@ npm install
 npm run dev
 ```
 
-### JavaScript/TypeScript Style Guide
+Visit `http://localhost:3000` to see your local instance.
 
-* Use TypeScript for all new code
-* Use modern ES6+ features
-* Follow the existing code style
-* Use meaningful variable names
-* Add comments for complex logic
-* Keep functions small and focused
-* Use async/await for asynchronous operations
+## 📝 Code Style Guide
 
-### Commit Messages
+We use TypeScript and modern web technologies to ensure code quality and maintainability:
 
-* Use the present tense ("Add feature" not "Added feature")
-* Use the imperative mood ("Move cursor to..." not "Moves cursor to...")
-* Limit the first line to 72 characters or less
-* Reference issues and pull requests liberally after the first line
+* TypeScript for type safety and better developer experience
+* Modern ES6+ features for clean and efficient code
+* Consistent formatting with Prettier
+* ESLint for code quality
+* Component-based architecture with React
+* Tailwind CSS for styling
+
+### Commit Style
+
+We follow conventional commits for clear history:
+
+```
+type(scope): description
+
+[optional body]
+
+[optional footer]
+```
 
 Example:
 ```
-Add password strength indicator
+feat(parser): add support for Opera browser exports
 
-- Add strength meter component
-- Implement zxcvbn password strength algorithm
-- Add color coding for different strength levels
+- Add Opera-specific CSV format parsing
+- Update documentation for Opera users
+- Add tests for new parser
 
 Fixes #123
 ```
 
-### Security
+## 🔒 Security
 
-Security is a top priority for Password Cleaner. If you discover any security issues, please email security@yourdomain.com instead of using the issue tracker.
+Security is our top priority. If you discover any security issues:
 
-Key security principles to follow:
-- Never send passwords or sensitive data to external servers
-- Always process data client-side
-- Use secure cryptographic methods when necessary
-- Follow OWASP security guidelines
+1. **DO NOT** open a public issue
+2. Email security@passwordcleaner.dev immediately
+3. Provide detailed information about the vulnerability
+4. Wait for a response before disclosing publicly
 
-## License
+Key Security Principles:
+- Zero server communication - all processing stays local
+- No data storage - everything stays in memory
+- Secure parsing and handling of sensitive data
+- Regular security audits and updates
 
-By contributing to Password Cleaner, you agree that your contributions will be licensed under its MIT license. 
+## 📄 License
+
+By contributing to Password Cleaner, you agree that your contributions will be licensed under the MIT License. See [LICENSE](LICENSE) for more details.
+
+## 🙏 Recognition
+
+Contributors are listed in our [README.md](README.md). We appreciate all contributions, big and small! 
