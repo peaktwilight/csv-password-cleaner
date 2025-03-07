@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { PasswordEntry, PasswordGroup } from '@/types/password';
 import { parseCSV, groupPasswordsByDomain, exportToCSV } from '@/utils/passwordUtils';
 import PasswordList from '@/components/PasswordList';
+import ExportInstructions from '@/components/ExportInstructions';
 import { 
   ArrowUpTrayIcon, 
   ArrowDownTrayIcon, 
@@ -126,7 +127,7 @@ export default function Home() {
               All processing happens locally in your browser for maximum privacy.
             </p>
             
-            <div className="mt-12 flex flex-col sm:flex-row gap-6 justify-center items-center">
+            <div className="mt-12 flex flex-col items-center gap-6">
               <div 
                 className={`w-full max-w-lg p-8 rounded-xl border-2 border-dashed transition-all duration-200 
                   ${dragActive 
@@ -150,6 +151,7 @@ export default function Home() {
                   />
                 </label>
               </div>
+              <ExportInstructions />
             </div>
           </div>
         </div>
