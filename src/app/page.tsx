@@ -92,6 +92,18 @@ export default function Home() {
     );
   };
 
+  const handleBulkUpdateStatus = (groupUrl: string, status: PasswordEntry['status']) => {
+    setPasswordGroups(prevGroups =>
+      prevGroups.map(group => {
+        if (group.url === groupUrl) {
+          const newEntries = group.entries.map(entry => ({ ...entry, status }));
+          return { ...group, entries: newEntries };
+        }
+        return group;
+      })
+    );
+  };
+
   return (
     <main className="min-h-screen">
       <div className="bg-gradient-to-b from-blue-600 to-blue-800 text-white">
@@ -273,6 +285,7 @@ export default function Home() {
             <PasswordList
               groups={passwordGroups}
               onUpdateStatus={updatePasswordStatus}
+              onBulkUpdateStatus={handleBulkUpdateStatus}
             />
           </div>
         ) : null}
