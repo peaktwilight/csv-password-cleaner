@@ -120,7 +120,7 @@ export default function Home() {
               <span className="text-sm font-medium">100% Open Source on GitHub</span>
             </a>
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-              Password Cleaner
+              CSV Password Cleaner
             </h1>
             <p className="mt-6 text-xl text-blue-100 max-w-3xl mx-auto">
               Securely organize and clean up your password exports from Chrome, Brave, Edge, and other Chromium-based browsers.
