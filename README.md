@@ -1,12 +1,14 @@
 # Password Cleaner
 
-A secure, client-side web application for cleaning up and managing password exports from Chrome and Brave browsers.
+A secure, client-side web application for cleaning up and managing password exports from Chrome, Brave, Edge and most other Chromium browsers.
+
+![Screenshot](public/password-screenshot.png)
 
 ## Features
 
 ### Core Features
 - Import password exports in CSV format
-- Secure, client-side processing - no data leaves your browser
+- Secure, fully-local client-side processing - no data leaves your browser,
 - Export cleaned password list back to CSV
 - Automatic password grouping by domain
 - Password strength analysis and visualization
@@ -14,7 +16,6 @@ A secure, client-side web application for cleaning up and managing password expo
 - Copy passwords to clipboard with one click
 
 ### Password Management
-- Group passwords by domain with expandable/collapsible sections
 - Mark passwords individually or in bulk as:
   - ✓ Keep
   - ✗ Delete
