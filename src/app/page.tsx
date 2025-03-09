@@ -150,26 +150,27 @@ export default function Home() {
                 <div className="mt-12 flex flex-col items-center gap-6">
                   <button
                     onClick={() => setShowInstructions(true)}
-                    className="group inline-flex items-center gap-2 px-6 py-2.5 bg-white/10 backdrop-blur-sm rounded-full hover:bg-white/20 transition-all duration-200 border border-white/20"
+                    className="group inline-flex items-center gap-2 px-6 py-2.5 bg-white/10 backdrop-blur-sm rounded-full hover:bg-white/20 transition-all duration-300 hover:scale-105 border border-white/20"
                   >
-                    <QuestionMarkCircleIcon className="w-5 h-5" />
+                    <QuestionMarkCircleIcon className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
                     <span className="text-sm font-medium">How to export your passwords</span>
-                    <ArrowTopRightOnSquareIcon className="w-4 h-4 opacity-0 -ml-4 group-hover:opacity-100 group-hover:ml-0 transition-all duration-200" />
+                    <ArrowTopRightOnSquareIcon className="w-4 h-4 opacity-0 -ml-4 group-hover:opacity-100 group-hover:ml-0 transition-all duration-300" />
                   </button>
                   
                   <div 
                     className={`w-full max-w-lg p-8 rounded-2xl border-2 border-dashed transition-all duration-300 backdrop-blur-sm
                       ${dragActive 
-                        ? 'border-white/60 bg-white/20 scale-102' 
-                        : 'border-white/30 bg-white/10 hover:bg-white/15'
+                        ? 'border-white/60 bg-white/20 scale-105 shadow-2xl shadow-blue-500/20' 
+                        : 'border-white/30 bg-white/10 hover:bg-white/15 hover:scale-102 hover:shadow-xl hover:shadow-blue-500/10'
                       }`}
                     onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
                     onDragLeave={() => setDragActive(false)}
                     onDrop={handleDrop}
                   >
                     <label className="flex flex-col items-center justify-center cursor-pointer gap-6">
-                      {/* Key turning animation */}
-                      <div className="w-32 h-32 p-4 bg-white/10 rounded-2xl backdrop-blur-sm">
+                      {/* Key turning animation with glow effect */}
+                      <div className={`w-32 h-32 p-4 bg-white/10 rounded-2xl backdrop-blur-sm transition-all duration-300
+                        ${dragActive ? 'scale-110 shadow-2xl shadow-blue-500/30' : 'hover:scale-105 hover:shadow-xl hover:shadow-blue-500/20'}`}>
                         <img 
                           src="/key-turning.gif" 
                           alt="Key turning animation" 
@@ -258,9 +259,9 @@ export default function Home() {
                   color: 'bg-purple-500'
                 }
               ].map((feature, index) => (
-                <div key={index} className="relative bg-white rounded-2xl shadow-lg p-8 transition-transform duration-200 hover:-translate-y-1">
-                  <div className={`absolute top-0 -translate-y-1/2 ${feature.color} rounded-xl p-3 shadow-lg`}>
-                    <feature.icon className="w-6 h-6 text-white" />
+                <div key={index} className="relative bg-white rounded-2xl shadow-lg p-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-blue-500/10">
+                  <div className={`absolute top-0 -translate-y-1/2 ${feature.color} rounded-xl p-3 shadow-lg transition-transform duration-300 group-hover:scale-110`}>
+                    <feature.icon className="w-6 h-6 text-white transition-transform duration-300 hover:rotate-12" />
                   </div>
                   <h3 className="mt-4 text-xl font-semibold text-gray-900">{feature.title}</h3>
                   <p className="mt-2 text-gray-600 leading-relaxed">{feature.description}</p>
@@ -328,8 +329,8 @@ export default function Home() {
                         icon: MagnifyingGlassIcon
                       }
                     ].map((feature, index) => (
-                      <div key={index} className="flex gap-4 p-6 bg-gray-50 rounded-xl border border-gray-100 hover:border-blue-200 transition-colors duration-200">
-                        <feature.icon className="w-6 h-6 text-blue-600 flex-shrink-0" />
+                      <div key={index} className="flex gap-4 p-6 bg-gray-50 rounded-xl border border-gray-100 hover:border-blue-200 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/5 hover:-translate-y-1">
+                        <feature.icon className="w-6 h-6 text-blue-600 flex-shrink-0 transition-transform duration-300 group-hover:rotate-12" />
                         <div>
                           <h3 className="text-lg font-semibold text-gray-900">{feature.title}</h3>
                           <p className="mt-2 text-gray-600">{feature.description}</p>
@@ -398,9 +399,9 @@ export default function Home() {
                         href="https://github.com/peaktwilight/chrome-csv-password-cleaner"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-colors duration-200 font-medium"
+                        className="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/20 font-medium"
                       >
-                        <StarIcon className="w-5 h-5 mr-2" />
+                        <StarIcon className="w-5 h-5 mr-2 transition-transform duration-300 group-hover:rotate-12" />
                         View Source
                       </a>
                     </div>
@@ -436,27 +437,27 @@ export default function Home() {
               <div className="flex items-center space-x-4">
                 <button
                   onClick={() => setShowPasswordGenerator(true)}
-                  className="inline-flex items-center px-5 py-2.5 bg-blue-50 text-blue-700 rounded-xl hover:bg-blue-100 transition-all duration-200 shadow-sm hover:shadow font-medium"
+                  className="inline-flex items-center px-5 py-2.5 bg-blue-50 text-blue-700 rounded-xl hover:bg-blue-100 transition-all duration-300 hover:scale-105 shadow-sm hover:shadow-lg hover:shadow-blue-500/10 font-medium"
                 >
-                  <SparklesIcon className="w-5 h-5 mr-2" />
+                  <SparklesIcon className="w-5 h-5 mr-2 transition-transform duration-300 group-hover:rotate-12" />
                   Generate Password
                 </button>
                 <button
                   onClick={() => setShowSecurityDashboard(!showSecurityDashboard)}
-                  className={`inline-flex items-center px-5 py-2.5 rounded-xl transition-all duration-200 shadow-sm hover:shadow font-medium ${
+                  className={`inline-flex items-center px-5 py-2.5 rounded-xl transition-all duration-300 hover:scale-105 shadow-sm hover:shadow-lg font-medium ${
                     showSecurityDashboard
-                      ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                      : 'bg-blue-50 text-blue-700 hover:bg-blue-100'
+                      ? 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:shadow-gray-500/10'
+                      : 'bg-blue-50 text-blue-700 hover:bg-blue-100 hover:shadow-blue-500/10'
                   }`}
                 >
-                  <ShieldCheckIcon className="w-5 h-5 mr-2" />
+                  <ShieldCheckIcon className="w-5 h-5 mr-2 transition-transform duration-300 group-hover:rotate-12" />
                   {showSecurityDashboard ? 'View Passwords' : 'Security Analysis'}
                 </button>
                 <button
                   onClick={handleExport}
-                  className="inline-flex items-center px-5 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-sm hover:shadow font-medium"
+                  className="inline-flex items-center px-5 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-300 hover:scale-105 shadow-sm hover:shadow-lg hover:shadow-blue-500/20 font-medium"
                 >
-                  <ArrowDownTrayIcon className="w-5 h-5 mr-2" />
+                  <ArrowDownTrayIcon className="w-5 h-5 mr-2 transition-transform duration-300 group-hover:rotate-12" />
                   Export Cleaned CSV
                 </button>
               </div>
