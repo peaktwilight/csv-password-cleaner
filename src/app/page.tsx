@@ -6,6 +6,7 @@ import { parseCSV, groupPasswordsByDomain, exportToCSV, analyzePasswordSecurity,
 import PasswordList from '@/components/PasswordList';
 import SecurityDashboard from '@/components/SecurityDashboard';
 import ExportInstructions from '@/components/ExportInstructions';
+import RandomPasswordGenerator from '@/components/RandomPasswordGenerator';
 import { 
   ArrowUpTrayIcon, 
   ArrowDownTrayIcon, 
@@ -21,7 +22,8 @@ import {
   ArrowsUpDownIcon,
   TrashIcon,
   CheckCircleIcon,
-  QuestionMarkCircleIcon
+  QuestionMarkCircleIcon,
+  SparklesIcon
 } from '@heroicons/react/24/outline';
 
 export default function Home() {
@@ -259,6 +261,22 @@ export default function Home() {
                 </div>
               ))}
             </div>
+
+            {/* Password Generator Section */}
+            <section className="mt-24 bg-white rounded-3xl overflow-hidden shadow-xl border border-gray-100">
+              <div className="px-8 py-12 sm:px-12">
+                <div className="flex items-center gap-4 mb-8">
+                  <div className="p-4 bg-blue-600 rounded-xl shadow-lg">
+                    <SparklesIcon className="w-8 h-8 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900">Password Generator</h2>
+                    <p className="text-gray-600 mt-1">Create strong, secure passwords instantly</p>
+                  </div>
+                </div>
+                <RandomPasswordGenerator />
+              </div>
+            </section>
 
             <div className="mt-24 space-y-24">
               {/* Password Management Features */}
