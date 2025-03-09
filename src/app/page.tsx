@@ -67,6 +67,14 @@ export default function Home() {
       
       const groups = groupPasswordsByDomain(entries);
       setPasswordGroups(groups);
+
+      // Scroll to password groups section after a short delay to ensure rendering is complete
+      setTimeout(() => {
+        window.scrollTo({
+          top: window.innerHeight*2/3,
+          behavior: 'smooth'
+        });
+      }, 100);
     } catch (error) {
       console.error('Error parsing CSV:', error);
       alert('Error parsing CSV file. Please make sure it\'s a valid export file.');
