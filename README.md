@@ -2,7 +2,10 @@
 
 A secure, client-side web application for cleaning up and managing password exports from Chrome, Brave, Edge and most other Chromium browsers.
 
-![Screenshot](public/password-screenshot.png)
+![alt text](public/screenshot-homepage.png)
+![alt text](public/screenshot-password-list.png)
+![alt text](public/screenshot-password-security=dashboard.png)
+![alt text](public/screenshot-password-generator.png)
 
 ## Features
 
