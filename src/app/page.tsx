@@ -14,10 +14,12 @@ import {
   CodeBracketIcon,
   StarIcon,
   ArrowTopRightOnSquareIcon,
-  LockClosedIcon,
-  SparklesIcon,
-  UserIcon,
-  CommandLineIcon
+  MagnifyingGlassIcon,
+  AdjustmentsHorizontalIcon,
+  UserGroupIcon,
+  ArrowsUpDownIcon,
+  TrashIcon,
+  CheckCircleIcon
 } from '@heroicons/react/24/outline';
 
 export default function Home() {
@@ -137,8 +139,8 @@ export default function Home() {
                 Password Cleaner
               </h1>
               <p className="mt-6 text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
-                A secure, client-side tool for organizing and cleaning up your password exports from Chrome, Brave, Edge, and other Chromium-based browsers.
-                Your data never leaves your device.
+                A powerful tool for organizing and cleaning up your browser passwords. Import your Chrome, Brave, or Edge password exports, 
+                review them efficiently, and export a clean, organized password list.
               </p>
               
               <div className="mt-12 flex flex-col items-center gap-6">
@@ -206,24 +208,25 @@ export default function Home() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {!passwordGroups.length && !isLoading && (
           <>
+            {/* Core Features */}
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-3 mt-8">
               {[
                 {
                   icon: ShieldCheckIcon,
                   title: 'Client-Side Security',
-                  description: 'All processing happens locally in your browser. Your passwords never leave your device - guaranteed.',
+                  description: 'Process your passwords locally in your browser. No servers, no data collection, complete privacy.',
                   color: 'bg-emerald-500'
                 },
                 {
-                  icon: SparklesIcon,
-                  title: 'Smart Organization',
-                  description: 'Automatically groups passwords by domain and helps identify duplicates for easy cleanup.',
+                  icon: AdjustmentsHorizontalIcon,
+                  title: 'Batch Actions',
+                  description: 'Efficiently manage passwords with bulk actions. Keep or delete entire domain groups with one click.',
                   color: 'bg-blue-500'
                 },
                 {
-                  icon: BeakerIcon,
-                  title: 'Built for Privacy',
-                  description: 'Zero analytics, no tracking, no data collection. Just a simple tool that respects your privacy.',
+                  icon: MagnifyingGlassIcon,
+                  title: 'Smart Search',
+                  description: 'Quickly find passwords by domain name. Sort and filter to focus on what matters.',
                   color: 'bg-purple-500'
                 }
               ].map((feature, index) => (
@@ -238,80 +241,102 @@ export default function Home() {
             </div>
 
             <div className="mt-24 space-y-24">
-              {/* About Section */}
-              <section className="bg-white rounded-3xl overflow-hidden shadow-xl border border-gray-100">
-                <div className="px-8 py-12 sm:px-12">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-                    <div className="flex items-center gap-4">
-                      <div className="p-4 bg-blue-600 rounded-xl shadow-lg">
-                        <UserIcon className="w-8 h-8 text-white" />
-                      </div>
-                      <div>
-                        <h2 className="text-2xl font-bold text-gray-900">About the Developer</h2>
-                        <p className="text-gray-600 mt-1">Built by Doruk Tan Ozturk</p>
-                      </div>
-                    </div>
-                    <div className="flex gap-3">
-                      <a
-                        href="https://github.com/peaktwilight"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl transition-colors duration-200 font-medium"
-                      >
-                        <StarIcon className="w-5 h-5 mr-2" />
-                        GitHub Profile
-                      </a>
-                    </div>
-                  </div>
-
-                  <div className="mt-8 prose prose-blue max-w-none">
-                    <p>
-                      Password Cleaner is a personal project born from the need to efficiently manage and organize browser password exports. 
-                      As someone who values both security and user privacy, I built this tool to run entirely in your browser, ensuring your sensitive data stays on your device.
-                    </p>
-                  </div>
-                </div>
-              </section>
-
-              {/* Features Section */}
+              {/* Password Management Features */}
               <section className="bg-white rounded-3xl overflow-hidden shadow-xl border border-gray-100">
                 <div className="px-8 py-12 sm:px-12">
                   <div className="flex items-center gap-4 mb-8">
                     <div className="p-4 bg-blue-600 rounded-xl shadow-lg">
-                      <CommandLineIcon className="w-8 h-8 text-white" />
+                      <UserGroupIcon className="w-8 h-8 text-white" />
                     </div>
-                    <h2 className="text-2xl font-bold text-gray-900">Key Features</h2>
+                    <h2 className="text-2xl font-bold text-gray-900">Password Management</h2>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {[
                       {
                         title: 'Domain Grouping',
-                        description: 'Automatically organizes passwords by website domain for better overview.'
+                        description: 'Automatically organizes passwords by website domain. See how many passwords you have per domain.',
+                        icon: DocumentDuplicateIcon
                       },
                       {
-                        title: 'Duplicate Detection',
-                        description: 'Identifies duplicate entries to help you maintain a clean password list.'
+                        title: 'Progress Tracking',
+                        description: 'Monitor your review progress with a clear percentage indicator. Know exactly how many passwords you\'ve processed.',
+                        icon: CheckCircleIcon
                       },
                       {
-                        title: 'Local Processing',
-                        description: 'All data processing happens in your browser - no server involvement.'
+                        title: 'Bulk Actions',
+                        description: 'Keep or delete all passwords for a domain at once. Perfect for cleaning up old or unused accounts.',
+                        icon: TrashIcon
                       },
                       {
-                        title: 'Browser Support',
-                        description: 'Works with exports from Chrome, Brave, Edge, and other Chromium browsers.'
+                        title: 'Smart Sorting',
+                        description: 'Sort domains by name or review progress. Find and organize passwords efficiently.',
+                        icon: ArrowsUpDownIcon
+                      },
+                      {
+                        title: 'Review States',
+                        description: 'Mark passwords for review later. Three states: Keep, Delete, or Review Later.',
+                        icon: AdjustmentsHorizontalIcon
+                      },
+                      {
+                        title: 'Search Functionality',
+                        description: 'Quickly find specific domains or accounts with the built-in search feature.',
+                        icon: MagnifyingGlassIcon
                       }
-                    ].map((item, index) => (
-                      <div key={index} className="bg-gray-50 rounded-xl p-6 border border-gray-100 hover:border-blue-200 transition-colors duration-200">
-                        <h3 className="text-lg font-semibold text-gray-900">{item.title}</h3>
-                        <p className="mt-2 text-gray-600">{item.description}</p>
+                    ].map((feature, index) => (
+                      <div key={index} className="flex gap-4 p-6 bg-gray-50 rounded-xl border border-gray-100 hover:border-blue-200 transition-colors duration-200">
+                        <feature.icon className="w-6 h-6 text-blue-600 flex-shrink-0" />
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-900">{feature.title}</h3>
+                          <p className="mt-2 text-gray-600">{feature.description}</p>
+                        </div>
                       </div>
                     ))}
                   </div>
                 </div>
               </section>
 
-              {/* Open Source Section */}
+              {/* About Section */}
+              <section className="bg-white rounded-3xl overflow-hidden shadow-xl border border-gray-100">
+                <div className="px-8 py-12 sm:px-12">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+                    <div className="flex items-center gap-4">
+                      <div className="p-4 bg-blue-600 rounded-xl shadow-lg">
+                        <BeakerIcon className="w-8 h-8 text-white" />
+                      </div>
+                      <div>
+                        <h2 className="text-2xl font-bold text-gray-900">How It Works</h2>
+                        <p className="text-gray-600 mt-1">Simple, secure, and efficient</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-8 grid grid-cols-1 gap-6">
+                    <div className="prose prose-blue max-w-none">
+                      <ol className="space-y-4">
+                        <li className="flex items-center gap-4">
+                          <span className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-blue-100 text-blue-600 font-semibold">1</span>
+                          <span>Export your passwords from Chrome, Brave, or Edge as a CSV file</span>
+                        </li>
+                        <li className="flex items-center gap-4">
+                          <span className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-blue-100 text-blue-600 font-semibold">2</span>
+                          <span>Upload the CSV file - all processing happens in your browser</span>
+                        </li>
+                        <li className="flex items-center gap-4">
+                          <span className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-blue-100 text-blue-600 font-semibold">3</span>
+                          <span>Review passwords grouped by domain, with options to keep, delete, or review later</span>
+                        </li>
+                        <li className="flex items-center gap-4">
+                          <span className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-blue-100 text-blue-600 font-semibold">4</span>
+                          <span>Export your cleaned password list, ready to import back into your browser</span>
+                        </li>
+                      </ol>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              {/* Developer Section */}
               <section className="bg-white rounded-3xl overflow-hidden shadow-xl border border-gray-100">
                 <div className="px-8 py-12 sm:px-12">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
@@ -320,8 +345,8 @@ export default function Home() {
                         <CodeBracketIcon className="w-8 h-8 text-white" />
                       </div>
                       <div>
-                        <h2 className="text-2xl font-bold text-gray-900">Open Source</h2>
-                        <p className="text-gray-600 mt-1">Transparent and free to use</p>
+                        <h2 className="text-2xl font-bold text-gray-900">Open Source Project</h2>
+                        <p className="text-gray-600 mt-1">Built by Doruk Tan Ozturk</p>
                       </div>
                     </div>
                     <div className="flex gap-3">
@@ -331,28 +356,18 @@ export default function Home() {
                         rel="noopener noreferrer"
                         className="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-colors duration-200 font-medium"
                       >
-                        <ArrowTopRightOnSquareIcon className="w-5 h-5 mr-2" />
+                        <StarIcon className="w-5 h-5 mr-2" />
                         View Source
                       </a>
                     </div>
                   </div>
 
-                  <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    {[
-                      {
-                        title: 'MIT License',
-                        description: 'Free to use, modify, and distribute. No strings attached.'
-                      },
-                      {
-                        title: 'Fully Auditable',
-                        description: 'Every line of code is open for review and verification.'
-                      }
-                    ].map((item, index) => (
-                      <div key={index} className="bg-gray-50 rounded-xl p-6 border border-gray-100 hover:border-blue-200 transition-colors duration-200">
-                        <h3 className="text-lg font-semibold text-gray-900">{item.title}</h3>
-                        <p className="mt-2 text-gray-600">{item.description}</p>
-                      </div>
-                    ))}
+                  <div className="mt-8 prose prose-blue max-w-none">
+                    <p>
+                      Password Cleaner is a personal project born from the need to efficiently manage browser password exports. 
+                      Built with modern web technologies and a focus on user privacy, it runs entirely in your browser to ensure 
+                      your sensitive data never leaves your device.
+                    </p>
                   </div>
                 </div>
               </section>
