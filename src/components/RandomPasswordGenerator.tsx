@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { CheckIcon, ClipboardIcon, SparklesIcon } from '@heroicons/react/24/outline';
+import { CheckIcon, ClipboardIcon, SparklesIcon, ShieldCheckIcon, BoltIcon, ClockIcon } from '@heroicons/react/24/outline';
 
 interface PasswordOptions {
   length: number;
@@ -7,6 +7,12 @@ interface PasswordOptions {
   lowercase: boolean;
   numbers: boolean;
   symbols: boolean;
+}
+
+interface PasswordStats {
+  entropy: number;
+  crackTime: string;
+  combinations: string;
 }
 
 export default function RandomPasswordGenerator() {
@@ -20,12 +26,59 @@ export default function RandomPasswordGenerator() {
     symbols: true,
   });
   const [isGenerating, setIsGenerating] = useState(false);
+  const [stats, setStats] = useState<PasswordStats | null>(null);
 
   const characterSets = {
     uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
     lowercase: 'abcdefghijklmnopqrstuvwxyz',
     numbers: '0123456789',
     symbols: '!@#$%^&*()_+-=[]{}|;:,.<>?'
+  };
+
+  const calculatePasswordStats = (pwd: string, opts: PasswordOptions): PasswordStats => {
+    // Calculate character set size
+    let poolSize = 0;
+    if (opts.uppercase) poolSize += 26;
+    if (opts.lowercase) poolSize += 26;
+    if (opts.numbers) poolSize += 10;
+    if (opts.symbols) poolSize += 33;
+
+    // Calculate entropy (bits)
+    const entropy = Math.floor(pwd.length * Math.log2(poolSize));
+
+    // Calculate possible combinations (as string due to large numbers)
+    const combinations = Math.pow(poolSize, pwd.length).toLocaleString('fullwide', { useGrouping: false });
+    
+    // Estimate crack time (assuming 100 billion guesses per second)
+    const guessesPerSecond = 1e11; // 100 billion
+    const secondsToCrack = Number(combinations) / guessesPerSecond;
+    
+    let crackTime: string;
+    if (entropy >= 128) {
+      crackTime = "trillions of years";
+    } else if (entropy >= 80) {
+      crackTime = "millions of years";
+    } else if (entropy >= 60) {
+      crackTime = "thousands of years";
+    } else if (secondsToCrack > 31536000) { // > 1 year
+      crackTime = `${Math.floor(secondsToCrack / 31536000)} years`;
+    } else if (secondsToCrack > 86400) { // > 1 day
+      crackTime = `${Math.floor(secondsToCrack / 86400)} days`;
+    } else if (secondsToCrack > 3600) { // > 1 hour
+      crackTime = `${Math.floor(secondsToCrack / 3600)} hours`;
+    } else if (secondsToCrack > 60) { // > 1 minute
+      crackTime = `${Math.floor(secondsToCrack / 60)} minutes`;
+    } else {
+      crackTime = `${Math.floor(secondsToCrack)} seconds`;
+    }
+
+    return {
+      entropy,
+      crackTime,
+      combinations: combinations.length > 20 
+        ? `${combinations.slice(0, 10)}...${combinations.slice(-5)} (${combinations.length} digits)`
+        : combinations.toLocaleString()
+    };
   };
 
   const generatePassword = () => {
@@ -53,12 +106,21 @@ export default function RandomPasswordGenerator() {
       setPassword(tempPassword);
       
       counter++;
-      if (counter > 5) { // Reduced animation time
+      if (counter > 5) {
         clearInterval(interval);
         setIsGenerating(false);
+        // Calculate stats for final password
+        setStats(calculatePasswordStats(tempPassword, options));
       }
-    }, 40); // Faster animation
+    }, 40);
   };
+
+  // Update stats when options change
+  useEffect(() => {
+    if (password) {
+      setStats(calculatePasswordStats(password, options));
+    }
+  }, [options, password]);
 
   const copyToClipboard = async () => {
     try {
@@ -76,32 +138,16 @@ export default function RandomPasswordGenerator() {
   }, [options]);
 
   const strengthColor = () => {
-    const score = (options.length >= 12 ? 1 : 0) +
-                 (options.uppercase ? 1 : 0) +
-                 (options.lowercase ? 1 : 0) +
-                 (options.numbers ? 1 : 0) +
-                 (options.symbols ? 1 : 0);
-    
-    if (score >= 5) return 'bg-emerald-500';
-    if (score >= 4) return 'bg-green-500';
-    if (score >= 3) return 'bg-yellow-500';
+    if (!stats) return 'bg-gray-300';
+    if (stats.entropy >= 128) return 'bg-emerald-500';
+    if (stats.entropy >= 80) return 'bg-green-500';
+    if (stats.entropy >= 60) return 'bg-yellow-500';
     return 'bg-red-500';
   };
 
   const calculateStrength = () => {
-    // Calculate base score from length (0-40%)
-    let lengthScore = ((options.length - 8) / 24) * 40;
-    
-    // Calculate character type score (0-60%)
-    const typeScore = [
-      options.uppercase,
-      options.lowercase,
-      options.numbers,
-      options.symbols
-    ].filter(Boolean).length * 15;
-    
-    // Combine scores
-    return Math.min(100, lengthScore + typeScore);
+    if (!stats) return 0;
+    return Math.min(100, (stats.entropy / 128) * 100);
   };
 
   return (
@@ -129,6 +175,36 @@ export default function RandomPasswordGenerator() {
           )}
         </button>
       </div>
+
+      {/* Password Stats */}
+      {stats && (
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+          <div className="bg-blue-50 rounded-xl p-4 border border-blue-100">
+            <div className="flex items-center gap-2 text-blue-600 mb-1">
+              <ShieldCheckIcon className="w-5 h-5" />
+              <span className="text-sm font-medium">Entropy</span>
+            </div>
+            <div className="text-lg font-semibold text-gray-900">{stats.entropy} bits</div>
+            <div className="text-xs text-gray-500 mt-1">Higher is better</div>
+          </div>
+          <div className="bg-purple-50 rounded-xl p-4 border border-purple-100">
+            <div className="flex items-center gap-2 text-purple-600 mb-1">
+              <BoltIcon className="w-5 h-5" />
+              <span className="text-sm font-medium">Combinations</span>
+            </div>
+            <div className="text-lg font-semibold text-gray-900">{stats.combinations}</div>
+            <div className="text-xs text-gray-500 mt-1">Possible variations</div>
+          </div>
+          <div className="bg-emerald-50 rounded-xl p-4 border border-emerald-100">
+            <div className="flex items-center gap-2 text-emerald-600 mb-1">
+              <ClockIcon className="w-5 h-5" />
+              <span className="text-sm font-medium">Time to Crack</span>
+            </div>
+            <div className="text-lg font-semibold text-gray-900">{stats.crackTime}</div>
+            <div className="text-xs text-gray-500 mt-1">At 100B guesses/second</div>
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Length Slider */}
