@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { PasswordEntry, PasswordGroup } from '@/types/password';
-import { parseCSV, groupPasswordsByDomain, exportToCSV } from '@/utils/passwordUtils';
+import type { PasswordEntry, PasswordGroup } from '@/types/password';
+import { parseCSV, groupPasswordsByDomain, exportToCSV, analyzePasswordSecurity, normalizeUrl } from '@/utils/passwordUtils';
 import PasswordList from '@/components/PasswordList';
+import SecurityDashboard from '@/components/SecurityDashboard';
 import ExportInstructions from '@/components/ExportInstructions';
 import { 
   ArrowUpTrayIcon, 
@@ -28,6 +29,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
+  const [showSecurityDashboard, setShowSecurityDashboard] = useState(false);
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -105,8 +107,10 @@ export default function Home() {
     setPasswordGroups(prevGroups =>
       prevGroups.map(group => {
         if (group.url === groupUrl) {
-          const newEntries = group.entries.map(entry => ({ ...entry, status }));
-          return { ...group, entries: newEntries };
+          return {
+            ...group,
+            entries: group.entries.map(entry => ({ ...entry, status }))
+          };
         }
         return group;
       })
@@ -397,19 +401,50 @@ export default function Home() {
               <h2 className="text-2xl font-semibold text-gray-900">
                 Password Groups ({passwordGroups.length})
               </h2>
-              <button
-                onClick={handleExport}
-                className="inline-flex items-center px-5 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-sm hover:shadow font-medium"
-              >
-                <ArrowDownTrayIcon className="w-5 h-5 mr-2" />
-                Export Cleaned CSV
-              </button>
+              <div className="flex items-center space-x-4">
+                <button
+                  onClick={() => setShowSecurityDashboard(!showSecurityDashboard)}
+                  className={`inline-flex items-center px-5 py-2.5 rounded-xl transition-all duration-200 shadow-sm hover:shadow font-medium ${
+                    showSecurityDashboard
+                      ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      : 'bg-blue-50 text-blue-700 hover:bg-blue-100'
+                  }`}
+                >
+                  <ShieldCheckIcon className="w-5 h-5 mr-2" />
+                  {showSecurityDashboard ? 'View Passwords' : 'Security Analysis'}
+                </button>
+                <button
+                  onClick={handleExport}
+                  className="inline-flex items-center px-5 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-sm hover:shadow font-medium"
+                >
+                  <ArrowDownTrayIcon className="w-5 h-5 mr-2" />
+                  Export Cleaned CSV
+                </button>
+              </div>
             </div>
-            <PasswordList
-              groups={passwordGroups}
-              onUpdateStatus={updatePasswordStatus}
-              onBulkUpdateStatus={handleBulkUpdateStatus}
-            />
+
+            {showSecurityDashboard ? (
+              <SecurityDashboard
+                analysis={analyzePasswordSecurity(passwordGroups.flatMap(g => g.entries))}
+                onUpdateStatus={(entry, status) => {
+                  const group = passwordGroups.find(g => g.url === normalizeUrl(entry.url));
+                  if (group) {
+                    const entryIndex = group.entries.findIndex(
+                      e => e.username === entry.username && e.password === entry.password
+                    );
+                    if (entryIndex !== -1) {
+                      updatePasswordStatus(group.url, entryIndex, status);
+                    }
+                  }
+                }}
+              />
+            ) : (
+              <PasswordList
+                groups={passwordGroups}
+                onUpdateStatus={updatePasswordStatus}
+                onBulkUpdateStatus={handleBulkUpdateStatus}
+              />
+            )}
           </div>
         ) : null}
       </div>

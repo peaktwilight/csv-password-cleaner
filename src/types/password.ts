@@ -21,4 +21,22 @@ export interface ImportedData {
   username: string;
   password: string;
   [key: string]: string;
+}
+
+export interface ReusedPassword {
+  password: string;
+  entries: PasswordEntry[];
+}
+
+export interface SecurityAnalysis {
+  reusedPasswords: ReusedPassword[];
+  weakPasswords: PasswordEntry[];
+  totalPasswords: number;
+  uniquePasswords: number;
+}
+
+export interface PasswordStrength {
+  score: number;
+  label: string;
+  color: string;
 } 
