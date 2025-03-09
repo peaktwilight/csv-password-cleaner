@@ -136,66 +136,75 @@ export default function Home() {
         
         {/* Hero content */}
         <div className="relative">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-24">
             <div className="text-center">
-              <div className="flex justify-center">
-                <a
-                  href="https://github.com/peaktwilight/chrome-csv-password-cleaner"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group inline-flex items-center gap-2 px-6 py-2.5 bg-white/10 backdrop-blur-sm rounded-full mb-8 hover:bg-white/20 transition-all duration-200 border border-white/20"
-                >
-                  <CodeBracketIcon className="w-5 h-5" />
-                  <span className="text-sm font-medium">View Source on GitHub</span>
-                  <ArrowTopRightOnSquareIcon className="w-4 h-4 opacity-0 -ml-4 group-hover:opacity-100 group-hover:ml-0 transition-all duration-200" />
-                </a>
-              </div>
-              
-              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-100">
-                CSV Password Cleaner
-              </h1>
-              <p className="mt-6 text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
-                A powerful tool for organizing and cleaning up your browser passwords. Import your Chrome, Brave, or Edge password exports, 
-                review them efficiently, and export a clean, organized password list.
-              </p>
-              
-              <div className="mt-12 flex flex-col items-center gap-6">
-                <button
-                  onClick={() => setShowInstructions(true)}
-                  className="group inline-flex items-center gap-2 px-6 py-2.5 bg-white/10 backdrop-blur-sm rounded-full hover:bg-white/20 transition-all duration-200 border border-white/20"
-                >
-                  <QuestionMarkCircleIcon className="w-5 h-5" />
-                  <span className="text-sm font-medium">How to export your passwords</span>
-                  <ArrowTopRightOnSquareIcon className="w-4 h-4 opacity-0 -ml-4 group-hover:opacity-100 group-hover:ml-0 transition-all duration-200" />
-                </button>
+              <div className="text-center">
+                {/* Key turning animation */}
+                <div className="flex justify-center mb-4">
+                  <img 
+                    src="/key-turning.gif" 
+                    alt="Key turning animation" 
+                    className="w-64 h-64"
+                  />
+                </div>
                 
-                <div 
-                  className={`w-full max-w-lg p-8 rounded-2xl border-2 border-dashed transition-all duration-300 backdrop-blur-sm
-                    ${dragActive 
-                      ? 'border-white/60 bg-white/20 scale-102' 
-                      : 'border-white/30 bg-white/10 hover:bg-white/15'
-                    }`}
-                  onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
-                  onDragLeave={() => setDragActive(false)}
-                  onDrop={handleDrop}
-                >
-                  <label className="flex flex-col items-center justify-center cursor-pointer gap-4">
-                    <div className="p-4 bg-white/20 rounded-xl">
-                      <ArrowUpTrayIcon className="w-8 h-8" />
-                    </div>
-                    <div className="text-center">
-                      <span className="text-lg font-medium block">
-                        {dragActive ? 'Drop your CSV file here' : 'Drag & drop your password CSV'}
-                      </span>
-                      <span className="text-sm text-blue-100">or click to browse files</span>
-                    </div>
-                    <input
-                      type="file"
-                      accept=".csv"
-                      onChange={handleFileUpload}
-                      className="hidden"
-                    />
-                  </label>
+                <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-100">
+                  CSV Password Cleaner
+                </h1>
+                <p className="mt-6 text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
+                  A powerful tool for organizing and cleaning up your browser passwords. Import your Chrome, Brave, or Edge password exports, 
+                  review them efficiently, and export a clean, organized password list.
+                </p>
+                
+                <div className="mt-12 flex flex-col items-center gap-6">
+                  <button
+                    onClick={() => setShowInstructions(true)}
+                    className="group inline-flex items-center gap-2 px-6 py-2.5 bg-white/10 backdrop-blur-sm rounded-full hover:bg-white/20 transition-all duration-200 border border-white/20"
+                  >
+                    <QuestionMarkCircleIcon className="w-5 h-5" />
+                    <span className="text-sm font-medium">How to export your passwords</span>
+                    <ArrowTopRightOnSquareIcon className="w-4 h-4 opacity-0 -ml-4 group-hover:opacity-100 group-hover:ml-0 transition-all duration-200" />
+                  </button>
+                  
+                  <div 
+                    className={`w-full max-w-lg p-8 rounded-2xl border-2 border-dashed transition-all duration-300 backdrop-blur-sm
+                      ${dragActive 
+                        ? 'border-white/60 bg-white/20 scale-102' 
+                        : 'border-white/30 bg-white/10 hover:bg-white/15'
+                      }`}
+                    onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
+                    onDragLeave={() => setDragActive(false)}
+                    onDrop={handleDrop}
+                  >
+                    <label className="flex flex-col items-center justify-center cursor-pointer gap-4">
+                      <div className="p-4 bg-white/20 rounded-xl">
+                        <ArrowUpTrayIcon className="w-8 h-8" />
+                      </div>
+                      <div className="text-center">
+                        <span className="text-lg font-medium block">
+                          {dragActive ? 'Drop your CSV file here' : 'Drag & drop your password CSV'}
+                        </span>
+                        <span className="text-sm text-blue-100">or click to browse files</span>
+                      </div>
+                      <input
+                        type="file"
+                        accept=".csv"
+                        onChange={handleFileUpload}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
+
+                  <a
+                    href="https://github.com/peaktwilight/chrome-csv-password-cleaner"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group inline-flex items-center gap-2 px-6 py-2.5 bg-white/10 backdrop-blur-sm rounded-full hover:bg-white/20 transition-all duration-200 border border-white/20"
+                  >
+                    <CodeBracketIcon className="w-5 h-5" />
+                    <span className="text-sm font-medium">View Source on GitHub</span>
+                    <ArrowTopRightOnSquareIcon className="w-4 h-4 opacity-0 -ml-4 group-hover:opacity-100 group-hover:ml-0 transition-all duration-200" />
+                  </a>
                 </div>
               </div>
             </div>
