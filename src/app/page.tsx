@@ -19,7 +19,8 @@ import {
   UserGroupIcon,
   ArrowsUpDownIcon,
   TrashIcon,
-  CheckCircleIcon
+  CheckCircleIcon,
+  QuestionMarkCircleIcon
 } from '@heroicons/react/24/outline';
 
 export default function Home() {
@@ -146,9 +147,11 @@ export default function Home() {
               <div className="mt-12 flex flex-col items-center gap-6">
                 <button
                   onClick={() => setShowInstructions(true)}
-                  className="text-sm text-blue-100 hover:text-white transition-colors duration-200"
+                  className="group inline-flex items-center gap-2 px-6 py-2.5 bg-white/10 backdrop-blur-sm rounded-full hover:bg-white/20 transition-all duration-200 border border-white/20"
                 >
-                  How to export your passwords?
+                  <QuestionMarkCircleIcon className="w-5 h-5" />
+                  <span className="text-sm font-medium">How to export your passwords</span>
+                  <ArrowTopRightOnSquareIcon className="w-4 h-4 opacity-0 -ml-4 group-hover:opacity-100 group-hover:ml-0 transition-all duration-200" />
                 </button>
                 
                 <div 
@@ -188,19 +191,24 @@ export default function Home() {
       {showInstructions && (
         <div className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-xl max-w-2xl w-full p-6">
-            <div className="flex justify-between items-start mb-4">
-              <h3 className="text-xl font-semibold text-gray-900">How to Export Your Passwords</h3>
+            <div className="flex justify-between items-start mb-6">
+              <div>
+                <h3 className="text-xl font-semibold text-gray-900">How to Export Your Passwords</h3>
+                <p className="mt-1 text-sm text-gray-500">Follow these steps for your browser</p>
+              </div>
               <button
                 onClick={() => setShowInstructions(false)}
-                className="text-gray-500 hover:text-gray-700"
+                className="text-gray-500 hover:text-gray-700 p-1 hover:bg-gray-100 rounded-lg transition-colors duration-200"
               >
                 <span className="sr-only">Close</span>
-                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
-            <ExportInstructions />
+            <div className="overflow-y-auto max-h-[calc(100vh-200px)]">
+              <ExportInstructions />
+            </div>
           </div>
         </div>
       )}
