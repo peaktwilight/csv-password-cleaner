@@ -136,18 +136,9 @@ export default function Home() {
         
         {/* Hero content */}
         <div className="relative">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-24">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
             <div className="text-center">
               <div className="text-center">
-                {/* Key turning animation */}
-                <div className="flex justify-center mb-4">
-                  <img 
-                    src="/key-turning.gif" 
-                    alt="Key turning animation" 
-                    className="w-64 h-64"
-                  />
-                </div>
-                
                 <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-100">
                   CSV Password Cleaner
                 </h1>
@@ -176,12 +167,17 @@ export default function Home() {
                     onDragLeave={() => setDragActive(false)}
                     onDrop={handleDrop}
                   >
-                    <label className="flex flex-col items-center justify-center cursor-pointer gap-4">
-                      <div className="p-4 bg-white/20 rounded-xl">
-                        <ArrowUpTrayIcon className="w-8 h-8" />
+                    <label className="flex flex-col items-center justify-center cursor-pointer gap-6">
+                      {/* Key turning animation */}
+                      <div className="w-32 h-32 p-4 bg-white/10 rounded-2xl backdrop-blur-sm">
+                        <img 
+                          src="/key-turning.gif" 
+                          alt="Key turning animation" 
+                          className="w-full h-full"
+                        />
                       </div>
-                      <div className="text-center">
-                        <span className="text-lg font-medium block">
+                      <div className="text-center space-y-2">
+                        <span className="text-xl font-medium block">
                           {dragActive ? 'Drop your CSV file here' : 'Drag & drop your password CSV'}
                         </span>
                         <span className="text-sm text-blue-100">or click to browse files</span>
