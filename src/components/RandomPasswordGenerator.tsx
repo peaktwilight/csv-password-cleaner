@@ -57,24 +57,55 @@ export default function RandomPasswordGenerator() {
     const yearsToCrack = secondsToCrack / 31536000; // seconds in a year
     const lightYearInKm = 9.461e12; // kilometers in a light year
     
-    if (yearsToCrack > 1e12) { // > 1 trillion years
-      const universeAges = yearsToCrack / 13.8e9; // Current age of universe is 13.8 billion years
-      crackTime = `${universeAges.toLocaleString(undefined, { maximumFractionDigits: 0 })} × age of universe`;
+    // Fun easter eggs and capped universe ages
+    if (yearsToCrack > 1e20) {
+      crackTime = "Not even quantum computers running until the heat death of the universe";
+    } else if (yearsToCrack > 1e15) {
+      crackTime = "The Earth will be consumed by the Sun first";
+    } else if (yearsToCrack > 1e12) { // > 1 trillion years
+      const universeAges = Math.min(1000, yearsToCrack / 13.8e9); // Cap at 1000x universe age
+      if (universeAges > 100) {
+        crackTime = `${universeAges.toLocaleString(undefined, { maximumFractionDigits: 0 })} × age of universe (perfect for your homework folder)`;
+      } else {
+        crackTime = `${universeAges.toLocaleString(undefined, { maximumFractionDigits: 0 })} × age of universe`;
+      }
     } else if (yearsToCrack > 1e6) { // > 1 million years
-      const lightYears = (yearsToCrack * 299792) / lightYearInKm; // Speed of light: 299,792 km/s
-      crackTime = `${lightYears.toLocaleString(undefined, { maximumFractionDigits: 0 })} light-years`;
+      const lightYears = (yearsToCrack * 299792) / lightYearInKm;
+      if (lightYears > 100000) {
+        crackTime = "Longer than your Netflix queue will take to watch";
+      } else {
+        crackTime = `${lightYears.toLocaleString(undefined, { maximumFractionDigits: 0 })} light-years (space nerds will love this)`;
+      }
     } else if (yearsToCrack > 1000) { // > 1000 years
-      crackTime = `${Math.floor(yearsToCrack).toLocaleString()} years`;
+      if (yearsToCrack > 100000) {
+        crackTime = "Longer than humans have been around :)";
+      } else {
+        crackTime = `${Math.floor(yearsToCrack).toLocaleString()} years (your great-great-grandkids say hi)`;
+      }
     } else if (yearsToCrack > 1) { // > 1 year
-      crackTime = `${Math.floor(yearsToCrack)} years`;
+      if (yearsToCrack > 100) {
+        crackTime = `${Math.floor(yearsToCrack)} years (about as long as your gym membership will last)`;
+      } else {
+        crackTime = `${Math.floor(yearsToCrack)} years`;
+      }
     } else if (secondsToCrack > 86400) { // > 1 day
-      crackTime = `${Math.floor(secondsToCrack / 86400)} days`;
+      if (secondsToCrack > 86400 * 30) {
+        crackTime = `${Math.floor(secondsToCrack / 86400)} days (longer than your average New Year's resolution)`;
+      } else {
+        crackTime = `${Math.floor(secondsToCrack / 86400)} days`;
+      }
     } else if (secondsToCrack > 3600) { // > 1 hour
-      crackTime = `${Math.floor(secondsToCrack / 3600)} hours`;
+      if (secondsToCrack > 3600 * 10) {
+        crackTime = `${Math.floor(secondsToCrack / 3600)} hours`;
+      } else {
+        crackTime = `${Math.floor(secondsToCrack / 3600)} hours`;
+      }
     } else if (secondsToCrack > 60) { // > 1 minute
-      crackTime = `${Math.floor(secondsToCrack / 60)} minutes`;
+      crackTime = `${Math.floor(secondsToCrack / 60)} minutes (make a coffee while you wait)`;
+    } else if (secondsToCrack > 1) {
+      crackTime = `${Math.floor(secondsToCrack)} seconds (faster than your last relationship)`;
     } else {
-      crackTime = `${Math.floor(secondsToCrack)} seconds`;
+      crackTime = "Instantly. My grandmother could crack this.";
     }
 
     return {
@@ -306,8 +337,7 @@ export default function RandomPasswordGenerator() {
                   options[key]
                     ? 'bg-gradient-to-br from-blue-50 via-blue-50 to-indigo-50 text-blue-700 border-blue-200 shadow-sm'
                     : 'bg-gradient-to-br from-gray-50 to-gray-100/50 text-gray-500 border-gray-200 hover:bg-gray-100'
-                } border hover:scale-[1.02]`}
-              >
+                } border hover:scale-[1.02]`}>
                 <div className="flex flex-col">
                   <span className="font-medium text-lg">{label}</span>
                   <span className="text-xs opacity-75">{desc}</span>
@@ -329,4 +359,4 @@ export default function RandomPasswordGenerator() {
       </div>
     </div>
   );
-} 
+}
