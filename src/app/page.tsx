@@ -32,6 +32,7 @@ export default function Home() {
   const [dragActive, setDragActive] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
   const [showSecurityDashboard, setShowSecurityDashboard] = useState(false);
+  const [showPasswordGenerator, setShowPasswordGenerator] = useState(false);
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -429,6 +430,13 @@ export default function Home() {
               </h2>
               <div className="flex items-center space-x-4">
                 <button
+                  onClick={() => setShowPasswordGenerator(true)}
+                  className="inline-flex items-center px-5 py-2.5 bg-blue-50 text-blue-700 rounded-xl hover:bg-blue-100 transition-all duration-200 shadow-sm hover:shadow font-medium"
+                >
+                  <SparklesIcon className="w-5 h-5 mr-2" />
+                  Generate Password
+                </button>
+                <button
                   onClick={() => setShowSecurityDashboard(!showSecurityDashboard)}
                   className={`inline-flex items-center px-5 py-2.5 rounded-xl transition-all duration-200 shadow-sm hover:shadow font-medium ${
                     showSecurityDashboard
@@ -474,6 +482,32 @@ export default function Home() {
           </div>
         ) : null}
       </div>
+
+      {/* Password Generator Modal */}
+      {showPasswordGenerator && (
+        <div className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-xl max-w-4xl w-full">
+            <div className="flex justify-between items-start p-6 pb-0">
+              <div>
+                <h3 className="text-xl font-semibold text-gray-900">Password Generator</h3>
+                <p className="mt-1 text-sm text-gray-500">Create strong, secure passwords instantly</p>
+              </div>
+              <button
+                onClick={() => setShowPasswordGenerator(false)}
+                className="text-gray-500 hover:text-gray-700 p-1 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+              >
+                <span className="sr-only">Close</span>
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="p-6">
+              <RandomPasswordGenerator />
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
