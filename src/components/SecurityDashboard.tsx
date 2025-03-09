@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import type { SecurityAnalysis, PasswordEntry, ReusedPassword } from '@/types/password';
 import { getPasswordStrength } from '@/utils/passwordUtils';
 import {
@@ -26,6 +27,21 @@ interface PasswordRevealState {
   entryIndex: number;
 }
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0 }
+};
+
 const SecurityIssueSection = ({ 
   title, 
   icon: Icon, 
@@ -43,10 +59,14 @@ const SecurityIssueSection = ({
   const percentage = Math.round((count / totalCount) * 100);
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-      <button
+    <motion.div 
+      className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
+      variants={itemVariants}
+    >
+      <motion.button
         onClick={() => setIsExpanded(!isExpanded)}
         className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
+        variants={itemVariants}
       >
         <div className="flex items-center space-x-3">
           <div className="p-2 rounded-lg bg-red-50">
@@ -64,20 +84,29 @@ const SecurityIssueSection = ({
         ) : (
           <ChevronDownIcon className="w-5 h-5 text-gray-400" />
         )}
-      </button>
+      </motion.button>
       
-      <div
-        className={`grid transition-all duration-200 ease-in-out ${
-          isExpanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
-        }`}
-      >
-        <div className="overflow-hidden">
-          <div className="px-6 py-4 border-t border-gray-100">
-            {children}
-          </div>
-        </div>
-      </div>
-    </div>
+      <AnimatePresence>
+        {isExpanded && (
+          <motion.div
+            initial={{ height: 0 }}
+            animate={{ height: "auto" }}
+            exit={{ height: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="overflow-hidden"
+          >
+            <motion.div 
+              className="px-6 py-4 border-t border-gray-100"
+              variants={containerVariants}
+              initial="hidden"
+              animate="show"
+            >
+              {children}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 };
 
@@ -104,7 +133,10 @@ const PasswordEntry = ({
   const strength = getPasswordStrength(entry.password);
   
   return (
-    <div className="flex items-center justify-between py-2">
+    <motion.div 
+      variants={itemVariants}
+      className="flex items-center justify-between py-2"
+    >
       <div className="flex-1 min-w-0">
         <div className="flex items-center space-x-2">
           <span className="font-medium text-gray-900 truncate">{entry.url}</span>
@@ -185,7 +217,7 @@ const PasswordEntry = ({
           Review Later
         </button>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
@@ -213,8 +245,14 @@ const ReusedPasswordGroup = ({
   };
 
   return (
-    <div className="border rounded-lg overflow-hidden">
-      <div className="p-4">
+    <motion.div 
+      variants={itemVariants}
+      className="border rounded-lg overflow-hidden"
+    >
+      <motion.div 
+        className="p-4"
+        whileHover={{ backgroundColor: "rgba(0,0,0,0.01)" }}
+      >
         <div className="flex items-center justify-between">
           <div>
             <div className="flex items-center space-x-2">
@@ -278,31 +316,40 @@ const ReusedPasswordGroup = ({
             </button>
           </div>
         </div>
-      </div>
+      </motion.div>
       
-      <div
-        className={`grid transition-all duration-200 ease-in-out ${
-          isExpanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
-        }`}
-      >
-        <div className="overflow-hidden">
-          <div className="px-4 pb-4 space-y-2 border-t border-gray-100">
-            {group.entries.map((entry, index) => (
-              <PasswordEntry
-                key={`${entry.url}-${entry.username}-${index}`}
-                entry={entry}
-                section="reused"
-                groupIndex={groupIndex}
-                entryIndex={index}
-                revealedPassword={revealedPassword}
-                onTogglePassword={onTogglePassword}
-                onUpdateStatus={onUpdateStatus}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
+      <AnimatePresence>
+        {isExpanded && (
+          <motion.div
+            initial={{ height: 0 }}
+            animate={{ height: "auto" }}
+            exit={{ height: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="overflow-hidden"
+          >
+            <motion.div 
+              variants={containerVariants}
+              initial="hidden"
+              animate="show"
+              className="px-4 pb-4 space-y-2 border-t border-gray-100"
+            >
+              {group.entries.map((entry, index) => (
+                <PasswordEntry
+                  key={`${entry.url}-${entry.username}-${index}`}
+                  entry={entry}
+                  section="reused"
+                  groupIndex={groupIndex}
+                  entryIndex={index}
+                  revealedPassword={revealedPassword}
+                  onTogglePassword={onTogglePassword}
+                  onUpdateStatus={onUpdateStatus}
+                />
+              ))}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 };
 
@@ -332,10 +379,24 @@ export default function SecurityDashboard({ analysis, onUpdateStatus }: Security
   };
 
   return (
-    <div className="space-y-6">
+    <motion.div 
+      className="space-y-6"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       {/* Summary Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+      <motion.div 
+        className="grid grid-cols-1 md:grid-cols-3 gap-4"
+        variants={containerVariants}
+        initial="hidden"
+        animate="show"
+      >
+        <motion.div 
+          variants={itemVariants}
+          className="bg-white rounded-xl shadow-sm border border-gray-100 p-4"
+          whileHover={{ y: -2, boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)" }}
+        >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-500">Total Passwords</p>
@@ -345,9 +406,13 @@ export default function SecurityDashboard({ analysis, onUpdateStatus }: Security
               <ShieldExclamationIcon className="w-6 h-6 text-blue-600" />
             </div>
           </div>
-        </div>
+        </motion.div>
         
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+        <motion.div 
+          variants={itemVariants}
+          className="bg-white rounded-xl shadow-sm border border-gray-100 p-4"
+          whileHover={{ y: -2, boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)" }}
+        >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-500">Unique Passwords</p>
@@ -362,9 +427,13 @@ export default function SecurityDashboard({ analysis, onUpdateStatus }: Security
               <ShieldExclamationIcon className="w-6 h-6 text-green-600" />
             </div>
           </div>
-        </div>
+        </motion.div>
         
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+        <motion.div 
+          variants={itemVariants}
+          className="bg-white rounded-xl shadow-sm border border-gray-100 p-4"
+          whileHover={{ y: -2, boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)" }}
+        >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-500">Weak Passwords</p>
@@ -379,18 +448,28 @@ export default function SecurityDashboard({ analysis, onUpdateStatus }: Security
               <ExclamationTriangleIcon className="w-6 h-6 text-yellow-600" />
             </div>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       {/* Security Issues */}
-      <div className="space-y-4">
+      <motion.div 
+        className="space-y-4"
+        variants={containerVariants}
+        initial="hidden"
+        animate="show"
+      >
         <SecurityIssueSection
           title="Reused Passwords"
           icon={ShieldExclamationIcon}
           count={analysis.reusedPasswords.length}
           totalCount={analysis.totalPasswords}
         >
-          <div className="space-y-4">
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            animate="show"
+            className="space-y-4"
+          >
             {analysis.reusedPasswords.map((group, index) => (
               <ReusedPasswordGroup
                 key={index}
@@ -401,7 +480,7 @@ export default function SecurityDashboard({ analysis, onUpdateStatus }: Security
                 onUpdateStatus={onUpdateStatus}
               />
             ))}
-          </div>
+          </motion.div>
         </SecurityIssueSection>
 
         <SecurityIssueSection
@@ -410,7 +489,12 @@ export default function SecurityDashboard({ analysis, onUpdateStatus }: Security
           count={analysis.weakPasswords.length}
           totalCount={analysis.totalPasswords}
         >
-          <div className="space-y-2">
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            animate="show"
+            className="space-y-2"
+          >
             {analysis.weakPasswords.map((entry, index) => (
               <PasswordEntry
                 key={`${entry.url}-${entry.username}-${index}`}
@@ -422,9 +506,9 @@ export default function SecurityDashboard({ analysis, onUpdateStatus }: Security
                 onUpdateStatus={onUpdateStatus}
               />
             ))}
-          </div>
+          </motion.div>
         </SecurityIssueSection>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 } 

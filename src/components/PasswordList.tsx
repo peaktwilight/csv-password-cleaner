@@ -1,4 +1,5 @@
 import { useState, useCallback, memo, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { PasswordGroup, PasswordEntry } from '@/types/password';
 import { 
   ArrowTopRightOnSquareIcon as ExternalLinkIcon, 
@@ -70,6 +71,22 @@ const PasswordStrength = ({ password }: { password: string }) => {
   );
 };
 
+// Add stagger animation variants
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0 }
+};
+
 // Memoize individual password entry to prevent unnecessary re-renders
 const PasswordEntryItem = memo(({ 
   entry, 
@@ -123,111 +140,98 @@ const PasswordEntryItem = memo(({
   };
 
   return (
-    <div className="bg-white border rounded-lg p-4 space-y-3 transition-all duration-200 hover:border-blue-200 hover:shadow-sm">
-      <div className="flex justify-between items-start">
-        <div className="space-y-1 flex-1">
-          <div className="flex items-center">
-            <p className="font-medium text-gray-900">{entry.username}</p>
-            {entry.name && entry.name !== entry.username && (
-              <span className="ml-2 px-2 py-0.5 bg-blue-50 text-blue-700 text-xs rounded-full">
-                {entry.name}
-              </span>
-            )}
-          </div>
-          
-          <div className="flex items-center mt-2 group/password relative">
-            <div className="relative flex-1">
-              <input
-                ref={passwordRef}
-                type={isRevealed ? 'text' : 'password'}
-                value={entry.password}
-                readOnly
-                className="w-full bg-gray-50 px-3 py-2 pr-20 rounded-lg text-sm font-mono border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
-              />
-              <div className="absolute right-2 top-1/2 -translate-y-1/2 flex space-x-1">
-                <button
-                  onClick={() => togglePasswordVisibility(groupUrl, index)}
-                  className="p-1.5 rounded-full hover:bg-gray-200 transition-colors duration-200"
-                  title={isRevealed ? 'Hide password' : 'Show password'}
-                >
-                  {isRevealed ? (
-                    <EyeSlashIcon className="w-4 h-4 text-gray-600" />
-                  ) : (
-                    <EyeIcon className="w-4 h-4 text-gray-600" />
-                  )}
-                </button>
-                <button
-                  onClick={copyPassword}
-                  className="p-1.5 rounded-full hover:bg-gray-200 transition-colors duration-200"
-                  title="Copy password"
-                >
-                  <ClipboardIcon className="w-4 h-4 text-gray-600" />
-                </button>
-              </div>
-            </div>
-            <button
-              onClick={(e) => visitSite(groupUrl)}
-              className="ml-2 p-2 rounded-lg opacity-0 group-hover/password:opacity-100 transition-opacity duration-200 hover:bg-blue-100 text-blue-700"
-              title="Visit website to test password"
-            >
-              <ExternalLinkIcon className="w-5 h-5" />
-            </button>
-          </div>
-          
-          {isRevealed && <PasswordStrength password={entry.password} />}
-        </div>
-        
-        <div className="flex space-x-2 ml-4">
-          <button
-            onClick={() => onUpdateStatus(groupUrl, index, 'keep')}
-            className={`px-3 py-1.5 rounded-lg transition-all duration-200 flex items-center space-x-2 ${
-              entry.status === 'keep' 
-                ? 'bg-green-100 text-green-700' 
-                : 'hover:bg-gray-100 text-gray-600'
-            }`}
-          >
-            <CheckIcon className="w-4 h-4" />
-            <span>Keep</span>
-          </button>
-          <button
-            onClick={() => onUpdateStatus(groupUrl, index, 'delete')}
-            className={`px-3 py-1.5 rounded-lg transition-all duration-200 flex items-center space-x-2 ${
-              entry.status === 'delete' 
-                ? 'bg-red-100 text-red-700' 
-                : 'hover:bg-gray-100 text-gray-600'
-            }`}
-          >
-            <XMarkIcon className="w-4 h-4" />
-            <span>Delete</span>
-          </button>
-          <button
-            onClick={() => onUpdateStatus(groupUrl, index, 'review')}
-            className={`px-3 py-1.5 rounded-lg transition-all duration-200 flex items-center space-x-2 ${
-              entry.status === 'review' 
-                ? 'bg-yellow-100 text-yellow-700' 
-                : 'hover:bg-gray-100 text-gray-600'
-            }`}
-          >
-            <QuestionMarkCircleIcon className="w-4 h-4" />
-            <span>Review Later</span>
-          </button>
-        </div>
-      </div>
-      
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-2">
-          <span className={`px-2 py-0.5 rounded-full text-xs font-medium border transition-colors duration-200 flex items-center space-x-1 ${getStatusColor(entry.status)}`}>
-            {getStatusIcon(entry.status)}
-            <span>{entry.status || 'review'}</span>
-          </span>
-          {entry.timeLastUsed && (
-            <span className="text-xs text-gray-500">
-              Last used: {new Date(entry.timeLastUsed).toLocaleDateString()}
+    <motion.div 
+      variants={itemVariants}
+      className="flex items-center justify-between gap-4 p-3 bg-white rounded-lg border border-gray-100 hover:border-blue-200 transition-all duration-200"
+    >
+      <div className="space-y-1 flex-1">
+        <div className="flex items-center">
+          <p className="font-medium text-gray-900">{entry.username}</p>
+          {entry.name && entry.name !== entry.username && (
+            <span className="ml-2 px-2 py-0.5 bg-blue-50 text-blue-700 text-xs rounded-full">
+              {entry.name}
             </span>
           )}
         </div>
+        
+        <div className="flex items-center mt-2 group/password relative">
+          <div className="relative flex-1">
+            <input
+              ref={passwordRef}
+              type={isRevealed ? 'text' : 'password'}
+              value={entry.password}
+              readOnly
+              className="w-full bg-gray-50 px-3 py-2 pr-20 rounded-lg text-sm font-mono border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+            />
+            <div className="absolute right-2 top-1/2 -translate-y-1/2 flex space-x-1">
+              <button
+                onClick={() => togglePasswordVisibility(groupUrl, index)}
+                className="p-1.5 rounded-full hover:bg-gray-200 transition-colors duration-200"
+                title={isRevealed ? 'Hide password' : 'Show password'}
+              >
+                {isRevealed ? (
+                  <EyeSlashIcon className="w-4 h-4 text-gray-600" />
+                ) : (
+                  <EyeIcon className="w-4 h-4 text-gray-600" />
+                )}
+              </button>
+              <button
+                onClick={copyPassword}
+                className="p-1.5 rounded-full hover:bg-gray-200 transition-colors duration-200"
+                title="Copy password"
+              >
+                <ClipboardIcon className="w-4 h-4 text-gray-600" />
+              </button>
+            </div>
+          </div>
+          <button
+            onClick={(e) => visitSite(groupUrl)}
+            className="ml-2 p-2 rounded-lg opacity-0 group-hover/password:opacity-100 transition-opacity duration-200 hover:bg-blue-100 text-blue-700"
+            title="Visit website to test password"
+          >
+            <ExternalLinkIcon className="w-5 h-5" />
+          </button>
+        </div>
+        
+        {isRevealed && <PasswordStrength password={entry.password} />}
       </div>
-    </div>
+      
+      <div className="flex space-x-2">
+        <button
+          onClick={() => onUpdateStatus(groupUrl, index, 'keep')}
+          className={`px-3 py-1.5 rounded-lg transition-all duration-200 flex items-center space-x-2 ${
+            entry.status === 'keep' 
+              ? 'bg-green-100 text-green-700' 
+              : 'hover:bg-gray-100 text-gray-600'
+          }`}
+        >
+          <CheckIcon className="w-4 h-4" />
+          <span>Keep</span>
+        </button>
+        <button
+          onClick={() => onUpdateStatus(groupUrl, index, 'delete')}
+          className={`px-3 py-1.5 rounded-lg transition-all duration-200 flex items-center space-x-2 ${
+            entry.status === 'delete' 
+              ? 'bg-red-100 text-red-700' 
+              : 'hover:bg-gray-100 text-gray-600'
+          }`}
+        >
+          <XMarkIcon className="w-4 h-4" />
+          <span>Delete</span>
+        </button>
+        <button
+          onClick={() => onUpdateStatus(groupUrl, index, 'review')}
+          className={`px-3 py-1.5 rounded-lg transition-all duration-200 flex items-center space-x-2 ${
+            entry.status === 'review' 
+              ? 'bg-yellow-100 text-yellow-700' 
+              : 'hover:bg-gray-100 text-gray-600'
+          }`}
+        >
+          <QuestionMarkCircleIcon className="w-4 h-4" />
+          <span>Review Later</span>
+        </button>
+      </div>
+    </motion.div>
   );
 });
 
@@ -279,20 +283,12 @@ const GroupHeader = memo(({
   };
 
   return (
-    <div 
-      className="w-full flex items-center space-x-3 cursor-pointer group p-4 focus:outline-none"
-      onClick={onToggle}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          onToggle();
-        }
-      }}
+    <motion.div 
+      className="p-4 flex items-center justify-between bg-gray-50"
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
     >
-      <DomainIcon domain={group.url} />
-      
       <div className="flex-1 min-w-0">
         <h3 className="text-lg font-semibold text-gray-800 flex items-center truncate">
           {group.url}
@@ -367,7 +363,7 @@ const GroupHeader = memo(({
           <ArrowDownIcon className={`w-5 h-5 text-gray-500 transform transition-transform duration-150 ${isExpanded ? 'rotate-180' : ''}`} />
         </button>
       </div>
-    </div>
+    </motion.div>
   );
 });
 
@@ -531,7 +527,12 @@ export default function PasswordList({ groups, onUpdateStatus, onBulkUpdateStatu
   );
 
   return (
-    <div className="space-y-4">
+    <motion.div 
+      className="space-y-4"
+      variants={containerVariants}
+      initial="hidden"
+      animate="show"
+    >
       <div className="flex justify-between items-start mb-4">
         <SearchBar onSearch={setSearchQuery} />
         <SortControls onSortChange={setSortOption} currentSort={sortOption} />
@@ -539,43 +540,59 @@ export default function PasswordList({ groups, onUpdateStatus, onBulkUpdateStatu
       
       <ProgressIndicator groups={groups} />
       
-      {filteredGroups.map((group) => (
-        <div 
-          key={group.url} 
-          className="bg-white rounded-xl shadow p-0 transition-all duration-200 hover:shadow-md overflow-hidden"
-        >
-          <GroupHeader
-            group={group}
-            isExpanded={expandedGroups.has(group.url)}
-            onToggle={() => toggleGroup(group.url)}
-            onVisitSite={visitSite}
-            onBulkUpdate={(status) => onBulkUpdateStatus(group.url, status)}
-          />
-
-          <div 
-            className={`grid transition-all ${animation ? 'duration-150' : 'duration-0'} ease-in-out ${
-              expandedGroups.has(group.url) ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-            }`}
+      <AnimatePresence>
+        {filteredGroups.map((group) => (
+          <motion.div 
+            key={group.url} 
+            layout
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+            className="bg-white rounded-xl shadow p-0 transition-all duration-200 hover:shadow-md overflow-hidden"
           >
-            <div className="overflow-hidden">
-              <div className="px-4 pb-4 pt-0 space-y-3">
-                {group.entries.map((entry, index) => (
-                  <PasswordEntryItem
-                    key={index}
-                    entry={entry}
-                    index={index}
-                    groupUrl={group.url}
-                    onUpdateStatus={onUpdateStatus}
-                    revealedPassword={revealedPassword}
-                    togglePasswordVisibility={togglePasswordVisibility}
-                    visitSite={visitSite}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
+            <GroupHeader
+              group={group}
+              isExpanded={expandedGroups.has(group.url)}
+              onToggle={() => toggleGroup(group.url)}
+              onVisitSite={visitSite}
+              onBulkUpdate={(status) => onBulkUpdateStatus(group.url, status)}
+            />
+
+            <AnimatePresence>
+              {expandedGroups.has(group.url) && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                  className="overflow-hidden"
+                >
+                  <motion.div 
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="show"
+                    className="px-4 pb-4 pt-0 space-y-3"
+                  >
+                    {group.entries.map((entry, index) => (
+                      <PasswordEntryItem
+                        key={index}
+                        entry={entry}
+                        index={index}
+                        groupUrl={group.url}
+                        onUpdateStatus={onUpdateStatus}
+                        revealedPassword={revealedPassword}
+                        togglePasswordVisibility={togglePasswordVisibility}
+                        visitSite={visitSite}
+                      />
+                    ))}
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        ))}
+      </AnimatePresence>
+    </motion.div>
   );
 } 

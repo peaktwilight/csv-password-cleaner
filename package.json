@@ -39,6 +39,7 @@
     "@headlessui/react": "^1.7.18",
     "@heroicons/react": "^2.1.1",
     "critters": "^0.0.23",
+    "framer-motion": "^12.4.10",
     "next": "14.1.0",
     "papaparse": "^5.4.1",
     "react": "^18",

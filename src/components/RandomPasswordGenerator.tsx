@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { CheckIcon, ClipboardIcon, SparklesIcon, ShieldCheckIcon, BoltIcon, ClockIcon } from '@heroicons/react/24/outline';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface PasswordOptions {
   length: number;
@@ -187,69 +188,130 @@ export default function RandomPasswordGenerator() {
   };
 
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       {/* Password Display */}
       <div className="relative mb-8">
-        <div className={`relative font-mono text-xl p-8 bg-gradient-to-br from-white to-gray-50 rounded-2xl border border-gray-200 break-all transition-all duration-300 ${
-          isGenerating ? 'blur-sm scale-98' : ''
-        }`}>
-          <div className="absolute inset-0.5 bg-gradient-to-br from-blue-500/5 to-purple-500/5 rounded-2xl" />
-          <div className="relative font-medium tracking-wide">
-            {password || 'Generating...'}
-          </div>
-          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/10 via-transparent to-purple-500/10 opacity-0 hover:opacity-100 transition-opacity duration-500" />
-        </div>
-        <button
+        <motion.div 
           onClick={copyToClipboard}
-          disabled={!password}
-          className={`absolute right-6 top-1/2 -translate-y-1/2 p-3 rounded-xl transition-all duration-300 ${
-            copied 
-              ? 'bg-green-50 text-green-600 ring-2 ring-green-500/20' 
-              : 'hover:bg-gray-100 text-gray-500 hover:text-gray-700 hover:scale-105'
+          className={`group relative font-mono text-xl p-8 bg-gradient-to-br from-white to-gray-50 rounded-2xl border border-gray-200 break-all transition-all duration-300 cursor-pointer ${
+            isGenerating ? 'blur-sm scale-98' : ''
           }`}
+          animate={isGenerating ? { scale: 0.98, opacity: 0.8 } : { scale: 1, opacity: 1 }}
+          transition={{ duration: 0.3 }}
+          whileHover={{ scale: 1.01 }}
+          whileTap={{ scale: 0.99 }}
         >
-          {copied ? (
-            <CheckIcon className="w-5 h-5" />
-          ) : (
-            <ClipboardIcon className="w-5 h-5" />
-          )}
-        </button>
+          <motion.div 
+            className="absolute inset-0.5 bg-gradient-to-br from-blue-500/5 to-purple-500/5 rounded-2xl"
+            animate={{ opacity: [0.5, 1, 0.5] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          />
+          <motion.div 
+            className="relative font-medium tracking-wide"
+            layout
+          >
+            {password || 'Generating...'}
+          </motion.div>
+          <motion.div 
+            className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/10 via-transparent to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          />
+          <div className="absolute right-6 top-1/2 -translate-y-1/2 w-11 h-11 pointer-events-none">
+            <motion.div
+              className={`w-full h-full flex items-center justify-center rounded-xl transition-colors duration-300 ${
+                copied 
+                  ? 'bg-green-50 text-green-600 ring-2 ring-green-500/20' 
+                  : 'bg-gray-50/80 text-gray-500'
+              }`}
+            >
+              <AnimatePresence mode="wait" initial={false}>
+                {copied ? (
+                  <motion.div
+                    key="check"
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.5, opacity: 0 }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    <CheckIcon className="w-5 h-5" />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="copy"
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.5, opacity: 0 }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    <ClipboardIcon className="w-5 h-5" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          </div>
+        </motion.div>
       </div>
 
       {/* Password Stats */}
-      {stats && (
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-          <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-2xl p-4 border border-blue-100 hover:scale-[1.02] transition-transform duration-200">
-            <div className="flex items-center gap-2 text-blue-600 mb-1">
-              <ShieldCheckIcon className="w-5 h-5" />
-              <span className="text-sm font-medium">Entropy</span>
-            </div>
-            <div className="text-lg font-semibold text-gray-900">{stats.entropy} bits</div>
-            <div className="text-xs text-blue-600/70 mt-1">Higher is better</div>
-          </div>
-          <div className="bg-gradient-to-br from-purple-50 to-purple-100/50 rounded-2xl p-4 border border-purple-100 hover:scale-[1.02] transition-transform duration-200">
-            <div className="flex items-center gap-2 text-purple-600 mb-1">
-              <BoltIcon className="w-5 h-5" />
-              <span className="text-sm font-medium">Combinations</span>
-            </div>
-            <div className="text-lg font-semibold text-gray-900">{stats.combinations}</div>
-            <div className="text-xs text-purple-600/70 mt-1">Possible variations</div>
-          </div>
-          <div className="bg-gradient-to-br from-emerald-50 to-emerald-100/50 rounded-2xl p-4 border border-emerald-100 hover:scale-[1.02] transition-transform duration-200">
-            <div className="flex items-center gap-2 text-emerald-600 mb-1">
-              <ClockIcon className="w-5 h-5" />
-              <span className="text-sm font-medium">Time to Crack</span>
-            </div>
-            <div className="text-lg font-semibold text-gray-900">{stats.crackTime}</div>
-            <div className="text-xs text-emerald-600/70 mt-1">At 100B guesses/second</div>
-          </div>
-        </div>
-      )}
+      <AnimatePresence>
+        {stats && (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8"
+          >
+            <motion.div 
+              className="bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-2xl p-4 border border-blue-100 hover:scale-[1.02] transition-transform duration-200"
+              whileHover={{ scale: 1.02, y: -2 }}
+            >
+              <div className="flex items-center gap-2 text-blue-600 mb-1">
+                <ShieldCheckIcon className="w-5 h-5" />
+                <span className="text-sm font-medium">Entropy</span>
+              </div>
+              <div className="text-lg font-semibold text-gray-900">{stats.entropy} bits</div>
+              <div className="text-xs text-blue-600/70 mt-1">Higher is better</div>
+            </motion.div>
+            <motion.div 
+              className="bg-gradient-to-br from-purple-50 to-purple-100/50 rounded-2xl p-4 border border-purple-100 hover:scale-[1.02] transition-transform duration-200"
+              whileHover={{ scale: 1.02, y: -2 }}
+            >
+              <div className="flex items-center gap-2 text-purple-600 mb-1">
+                <BoltIcon className="w-5 h-5" />
+                <span className="text-sm font-medium">Combinations</span>
+              </div>
+              <div className="text-lg font-semibold text-gray-900">{stats.combinations}</div>
+              <div className="text-xs text-purple-600/70 mt-1">Possible variations</div>
+            </motion.div>
+            <motion.div 
+              className="bg-gradient-to-br from-emerald-50 to-emerald-100/50 rounded-2xl p-4 border border-emerald-100 hover:scale-[1.02] transition-transform duration-200"
+              whileHover={{ scale: 1.02, y: -2 }}
+            >
+              <div className="flex items-center gap-2 text-emerald-600 mb-1">
+                <ClockIcon className="w-5 h-5" />
+                <span className="text-sm font-medium">Time to Crack</span>
+              </div>
+              <div className="text-lg font-semibold text-gray-900">{stats.crackTime}</div>
+              <div className="text-xs text-emerald-600/70 mt-1">At 100B guesses/second</div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Password Options */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Column: Length Slider */}
-        <div className="lg:col-span-1">
-          <div>
+        <div>
+          <motion.div 
+            className="space-y-6"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
+          >
             <div className="flex justify-between mb-2">
               <label className="text-sm font-medium text-gray-700">Length: {options.length}</label>
               <span className={`text-xs px-3 py-1 rounded-full font-medium transition-colors duration-300 ${
@@ -284,22 +346,27 @@ export default function RandomPasswordGenerator() {
                 <span className="text-xs text-gray-500">32</span>
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          {/* Strength Indicator */}
-          <div className="mt-6">
+          <motion.div 
+            className="mt-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+          >
             <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
-              <div 
-                className={`h-full ${strengthColor()} transition-all duration-500 ease-out`} 
-                style={{
-                  width: `${calculateStrength()}%`
-                }}
+              <motion.div 
+                className={`h-full ${strengthColor()} transition-all duration-500 ease-out`}
+                style={{ width: `${calculateStrength()}%` }}
+                initial={{ width: 0 }}
+                animate={{ width: `${calculateStrength()}%` }}
+                transition={{ duration: 0.5 }}
               />
             </div>
-          </div>
+          </motion.div>
 
           {/* Generate Button */}
-          <button
+          <motion.button
             onClick={generatePassword}
             disabled={isGenerating}
             className={`w-full mt-6 py-3.5 px-4 rounded-xl text-white font-medium transition-all duration-300 ${
@@ -307,24 +374,35 @@ export default function RandomPasswordGenerator() {
                 ? 'bg-gray-400 cursor-not-allowed'
                 : 'bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 hover:from-blue-700 hover:via-blue-800 hover:to-indigo-800 shadow-md hover:shadow-lg hover:-translate-y-0.5'
             }`}
+            whileHover={{ y: -2 }}
+            whileTap={{ y: 0 }}
           >
-            <div className="flex items-center justify-center gap-2">
+            <motion.div 
+              className="flex items-center justify-center gap-2"
+              animate={isGenerating ? { scale: [1, 1.05, 1] } : {}}
+              transition={{ duration: 0.5, repeat: Infinity }}
+            >
               <SparklesIcon className="w-5 h-5" />
               {isGenerating ? 'Generating...' : 'Generate New Password'}
-            </div>
-          </button>
+            </motion.div>
+          </motion.button>
         </div>
 
         {/* Right Column: Character Types */}
         <div className="lg:col-span-2">
-          <div className="grid grid-cols-2 gap-3">
+          <motion.div 
+            className="grid grid-cols-2 gap-3"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
             {[
               { key: 'uppercase' as const, label: 'ABC', desc: 'Uppercase Letters', example: 'A-Z' },
               { key: 'lowercase' as const, label: 'abc', desc: 'Lowercase Letters', example: 'a-z' },
               { key: 'numbers' as const, label: '123', desc: 'Numbers', example: '0-9' },
               { key: 'symbols' as const, label: '#@!', desc: 'Special Characters', example: '!@#$%^&*' }
             ].map(({ key, label, desc, example }) => (
-              <label
+              <motion.label
                 key={key}
                 onClick={(e) => {
                   e.preventDefault();
@@ -337,7 +415,10 @@ export default function RandomPasswordGenerator() {
                   options[key]
                     ? 'bg-gradient-to-br from-blue-50 via-blue-50 to-indigo-50 text-blue-700 border-blue-200 shadow-sm'
                     : 'bg-gradient-to-br from-gray-50 to-gray-100/50 text-gray-500 border-gray-200 hover:bg-gray-100'
-                } border hover:scale-[1.02]`}>
+                } border hover:scale-[1.02]`}
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+              >
                 <div className="flex flex-col">
                   <span className="font-medium text-lg">{label}</span>
                   <span className="text-xs opacity-75">{desc}</span>
@@ -352,11 +433,11 @@ export default function RandomPasswordGenerator() {
                     <CheckIcon className="w-4 h-4 text-white mx-auto mt-0.5" />
                   )}
                 </div>
-              </label>
+              </motion.label>
             ))}
-          </div>
+          </motion.div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
