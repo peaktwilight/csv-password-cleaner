@@ -143,7 +143,7 @@ export default function Home() {
                   CSV Password Cleaner
                 </h1>
                 <p className="mt-6 text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
-                  A powerful tool for organizing and cleaning up your browser passwords. Import your Chrome, Brave, or Edge password exports, 
+                  An open-source tool for organizing and cleaning up your browser passwords. Import your Chrome, Brave, or Edge password exports, 
                   review them efficiently, and export a clean, organized password list.
                 </p>
                 
