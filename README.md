@@ -8,12 +8,13 @@ A secure, client-side web application for cleaning up and managing password expo
 
 ### Core Features
 - Import password exports in CSV format
-- Secure, fully-local client-side processing - no data leaves your browser,
+- Secure, fully-local client-side processing - no data leaves your browser
 - Export cleaned password list back to CSV
 - Automatic password grouping by domain
 - Password strength analysis and visualization
 - Auto-hiding of revealed passwords after 30 seconds
 - Copy passwords to clipboard with one click
+- Modern, responsive UI with smooth animations and transitions
 
 ### Password Management
 - Mark passwords individually or in bulk as:
@@ -21,8 +22,11 @@ A secure, client-side web application for cleaning up and managing password expo
   - ✗ Delete
   - ? Review
 - Visit websites directly to test passwords
-- View password strength indicators
+- View password strength indicators with detailed metrics
 - Show/hide password values securely
+- Bulk actions for entire domain groups
+- Password reveal timeout (30-second auto-hide)
+- One-click password copying with visual feedback
 
 ### Organization & Sorting
 - Sort password groups by:
@@ -30,7 +34,7 @@ A secure, client-side web application for cleaning up and managing password expo
   - Number of passwords per domain
   - Last used date
   - Security risk level
-- Search functionality for quick access to specific:
+- Search functionality for quick access to:
   - Domains
   - Usernames
   - Password patterns
@@ -38,14 +42,48 @@ A secure, client-side web application for cleaning up and managing password expo
   - Status (keep/delete/review)
   - Password strength
   - Usage frequency
+- Domain-based grouping with collapsible sections
+- Visual progress tracking of reviewed passwords
 
 ### Security Features
 - Fully client-side processing for maximum security
 - No data storage - everything stays in memory
 - Automatic password hiding after inactivity
-- Password strength analysis
+- Password strength analysis including:
+  - Entropy calculation
+  - Character set complexity
+  - Length assessment
+  - Special character usage
 - Identification of duplicate passwords
 - Detection of weak or compromised passwords
+- Security dashboard with risk assessment
+
+### Password Generator
+- Generate strong passwords with customizable options:
+  - Length (6-32 characters)
+  - Uppercase letters
+  - Lowercase letters
+  - Numbers
+  - Special characters
+- Real-time password strength visualization
+- Advanced security metrics:
+  - Entropy calculation
+  - Number of possible combinations
+  - Time-to-crack estimates with humorous descriptions
+  - Visual strength indicator
+- Copy generated passwords with one click
+- Animated password generation effect
+
+### User Interface
+- Modern, clean design with gradient accents
+- Responsive layout for all screen sizes
+- Interactive elements with hover effects
+- Progress tracking visualization
+- Collapsible password groups
+- Smooth transitions and animations
+- Visual feedback for all actions
+- Domain favicons for easy recognition
+- Intuitive status indicators
 
 ## Getting Started
 
@@ -98,7 +136,7 @@ yarn dev
 4. Track your progress:
    - Use the progress indicator to see how many passwords you've reviewed
    - Filter out reviewed items to focus on remaining work
-   - Use keyboard shortcuts for faster review
+   - Sort by different criteria to optimize your workflow
 
 5. Click "Export Cleaned CSV" to download your cleaned password list.
 
@@ -109,18 +147,7 @@ This application processes all data locally in your browser:
 - No data is stored in localStorage or cookies
 - Memory is cleared when you close the tab
 - Passwords are automatically hidden after 30 seconds of being revealed
-
-## Keyboard Shortcuts
-
-Coming soon:
-- `Space`: Expand/collapse current group
-- `K`: Mark as keep
-- `D`: Mark as delete
-- `R`: Mark as review
-- `C`: Copy password
-- `V`: Visit website
-- `→`: Next password
-- `←`: Previous password
+- All processing happens client-side for maximum security
 
 ## License
 
