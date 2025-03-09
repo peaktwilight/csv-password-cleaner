@@ -131,7 +131,7 @@ export default function Home() {
               </div>
               
               <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-100">
-                Password Cleaner
+                CSV Password Cleaner
               </h1>
               <p className="mt-6 text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
                 Securely organize and clean up your password exports from Chrome, Brave, Edge, and other Chromium-based browsers.
