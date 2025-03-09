@@ -9,19 +9,22 @@ import {
   ArrowUpTrayIcon, 
   ArrowDownTrayIcon, 
   ShieldCheckIcon, 
-  GlobeAltIcon, 
+  BeakerIcon,
   DocumentDuplicateIcon,
   CodeBracketIcon,
   StarIcon,
   ArrowTopRightOnSquareIcon,
   LockClosedIcon,
-  SparklesIcon
+  SparklesIcon,
+  UserIcon,
+  CommandLineIcon
 } from '@heroicons/react/24/outline';
 
 export default function Home() {
   const [passwordGroups, setPasswordGroups] = useState<PasswordGroup[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(false);
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -125,20 +128,27 @@ export default function Home() {
                   className="group inline-flex items-center gap-2 px-6 py-2.5 bg-white/10 backdrop-blur-sm rounded-full mb-8 hover:bg-white/20 transition-all duration-200 border border-white/20"
                 >
                   <CodeBracketIcon className="w-5 h-5" />
-                  <span className="text-sm font-medium">Open Source on GitHub</span>
+                  <span className="text-sm font-medium">View Source on GitHub</span>
                   <ArrowTopRightOnSquareIcon className="w-4 h-4 opacity-0 -ml-4 group-hover:opacity-100 group-hover:ml-0 transition-all duration-200" />
                 </a>
               </div>
               
               <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-100">
-                CSV Password Cleaner
+                Password Cleaner
               </h1>
               <p className="mt-6 text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
-                Securely organize and clean up your password exports from Chrome, Brave, Edge, and other Chromium-based browsers.
-                All processing happens locally in your browser for maximum privacy.
+                A secure, client-side tool for organizing and cleaning up your password exports from Chrome, Brave, Edge, and other Chromium-based browsers.
+                Your data never leaves your device.
               </p>
               
               <div className="mt-12 flex flex-col items-center gap-6">
+                <button
+                  onClick={() => setShowInstructions(true)}
+                  className="text-sm text-blue-100 hover:text-white transition-colors duration-200"
+                >
+                  How to export your passwords?
+                </button>
+                
                 <div 
                   className={`w-full max-w-lg p-8 rounded-2xl border-2 border-dashed transition-all duration-300 backdrop-blur-sm
                     ${dragActive 
@@ -167,12 +177,31 @@ export default function Home() {
                     />
                   </label>
                 </div>
-                <ExportInstructions />
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      {showInstructions && (
+        <div className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-xl max-w-2xl w-full p-6">
+            <div className="flex justify-between items-start mb-4">
+              <h3 className="text-xl font-semibold text-gray-900">How to Export Your Passwords</h3>
+              <button
+                onClick={() => setShowInstructions(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <span className="sr-only">Close</span>
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <ExportInstructions />
+          </div>
+        </div>
+      )}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {!passwordGroups.length && !isLoading && (
@@ -181,20 +210,20 @@ export default function Home() {
               {[
                 {
                   icon: ShieldCheckIcon,
-                  title: 'Secure & Private',
-                  description: 'All processing happens locally in your browser. Your passwords never leave your device.',
+                  title: 'Client-Side Security',
+                  description: 'All processing happens locally in your browser. Your passwords never leave your device - guaranteed.',
                   color: 'bg-emerald-500'
                 },
                 {
                   icon: SparklesIcon,
                   title: 'Smart Organization',
-                  description: 'Automatically groups passwords by domain and helps identify duplicates.',
+                  description: 'Automatically groups passwords by domain and helps identify duplicates for easy cleanup.',
                   color: 'bg-blue-500'
                 },
                 {
-                  icon: LockClosedIcon,
-                  title: 'Zero Trust',
-                  description: 'No servers, no tracking, no data collection. Your security is our priority.',
+                  icon: BeakerIcon,
+                  title: 'Built for Privacy',
+                  description: 'Zero analytics, no tracking, no data collection. Just a simple tool that respects your privacy.',
                   color: 'bg-purple-500'
                 }
               ].map((feature, index) => (
@@ -208,62 +237,125 @@ export default function Home() {
               ))}
             </div>
 
-            <div className="mt-24 bg-white rounded-3xl overflow-hidden shadow-xl border border-gray-100">
-              <div className="px-8 py-12 sm:px-12">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-                  <div className="flex items-center gap-4">
-                    <div className="p-4 bg-blue-600 rounded-xl shadow-lg">
-                      <CodeBracketIcon className="w-8 h-8 text-white" />
+            <div className="mt-24 space-y-24">
+              {/* About Section */}
+              <section className="bg-white rounded-3xl overflow-hidden shadow-xl border border-gray-100">
+                <div className="px-8 py-12 sm:px-12">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+                    <div className="flex items-center gap-4">
+                      <div className="p-4 bg-blue-600 rounded-xl shadow-lg">
+                        <UserIcon className="w-8 h-8 text-white" />
+                      </div>
+                      <div>
+                        <h2 className="text-2xl font-bold text-gray-900">About the Developer</h2>
+                        <p className="text-gray-600 mt-1">Built by Doruk Tan Ozturk</p>
+                      </div>
                     </div>
-                    <div>
-                      <h2 className="text-2xl font-bold text-gray-900">100% Open Source</h2>
-                      <p className="text-gray-600 mt-1">Built with transparency and community in mind</p>
+                    <div className="flex gap-3">
+                      <a
+                        href="https://github.com/peaktwilight"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl transition-colors duration-200 font-medium"
+                      >
+                        <StarIcon className="w-5 h-5 mr-2" />
+                        GitHub Profile
+                      </a>
                     </div>
                   </div>
-                  <div className="flex gap-3">
-                    <a
-                      href="https://github.com/peaktwilight/chrome-csv-password-cleaner"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl transition-colors duration-200 font-medium"
-                    >
-                      <StarIcon className="w-5 h-5 mr-2" />
-                      Star on GitHub
-                    </a>
-                    <a
-                      href="https://github.com/peaktwilight/chrome-csv-password-cleaner/blob/main/CONTRIBUTING.md"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-colors duration-200 font-medium"
-                    >
-                      <ArrowTopRightOnSquareIcon className="w-5 h-5 mr-2" />
-                      Contribute
-                    </a>
-                  </div>
-                </div>
 
-                <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6">
-                  {[
-                    {
-                      title: 'MIT License',
-                      description: 'Free to use, modify, and distribute. No strings attached.'
-                    },
-                    {
-                      title: 'Community Driven',
-                      description: 'Built and maintained by developers who care about privacy.'
-                    },
-                    {
-                      title: 'Fully Auditable',
-                      description: 'Every line of code is open for review and improvement.'
-                    }
-                  ].map((item, index) => (
-                    <div key={index} className="bg-gray-50 rounded-xl p-6 border border-gray-100 hover:border-blue-200 transition-colors duration-200">
-                      <h3 className="text-lg font-semibold text-gray-900">{item.title}</h3>
-                      <p className="mt-2 text-gray-600">{item.description}</p>
-                    </div>
-                  ))}
+                  <div className="mt-8 prose prose-blue max-w-none">
+                    <p>
+                      Password Cleaner is a personal project born from the need to efficiently manage and organize browser password exports. 
+                      As someone who values both security and user privacy, I built this tool to run entirely in your browser, ensuring your sensitive data stays on your device.
+                    </p>
+                  </div>
                 </div>
-              </div>
+              </section>
+
+              {/* Features Section */}
+              <section className="bg-white rounded-3xl overflow-hidden shadow-xl border border-gray-100">
+                <div className="px-8 py-12 sm:px-12">
+                  <div className="flex items-center gap-4 mb-8">
+                    <div className="p-4 bg-blue-600 rounded-xl shadow-lg">
+                      <CommandLineIcon className="w-8 h-8 text-white" />
+                    </div>
+                    <h2 className="text-2xl font-bold text-gray-900">Key Features</h2>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    {[
+                      {
+                        title: 'Domain Grouping',
+                        description: 'Automatically organizes passwords by website domain for better overview.'
+                      },
+                      {
+                        title: 'Duplicate Detection',
+                        description: 'Identifies duplicate entries to help you maintain a clean password list.'
+                      },
+                      {
+                        title: 'Local Processing',
+                        description: 'All data processing happens in your browser - no server involvement.'
+                      },
+                      {
+                        title: 'Browser Support',
+                        description: 'Works with exports from Chrome, Brave, Edge, and other Chromium browsers.'
+                      }
+                    ].map((item, index) => (
+                      <div key={index} className="bg-gray-50 rounded-xl p-6 border border-gray-100 hover:border-blue-200 transition-colors duration-200">
+                        <h3 className="text-lg font-semibold text-gray-900">{item.title}</h3>
+                        <p className="mt-2 text-gray-600">{item.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </section>
+
+              {/* Open Source Section */}
+              <section className="bg-white rounded-3xl overflow-hidden shadow-xl border border-gray-100">
+                <div className="px-8 py-12 sm:px-12">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+                    <div className="flex items-center gap-4">
+                      <div className="p-4 bg-blue-600 rounded-xl shadow-lg">
+                        <CodeBracketIcon className="w-8 h-8 text-white" />
+                      </div>
+                      <div>
+                        <h2 className="text-2xl font-bold text-gray-900">Open Source</h2>
+                        <p className="text-gray-600 mt-1">Transparent and free to use</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-3">
+                      <a
+                        href="https://github.com/peaktwilight/chrome-csv-password-cleaner"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-colors duration-200 font-medium"
+                      >
+                        <ArrowTopRightOnSquareIcon className="w-5 h-5 mr-2" />
+                        View Source
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    {[
+                      {
+                        title: 'MIT License',
+                        description: 'Free to use, modify, and distribute. No strings attached.'
+                      },
+                      {
+                        title: 'Fully Auditable',
+                        description: 'Every line of code is open for review and verification.'
+                      }
+                    ].map((item, index) => (
+                      <div key={index} className="bg-gray-50 rounded-xl p-6 border border-gray-100 hover:border-blue-200 transition-colors duration-200">
+                        <h3 className="text-lg font-semibold text-gray-900">{item.title}</h3>
+                        <p className="mt-2 text-gray-600">{item.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </section>
             </div>
           </>
         )}
