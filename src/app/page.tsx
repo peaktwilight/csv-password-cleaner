@@ -7,7 +7,7 @@ import PasswordList from '@/components/PasswordList';
 import SecurityDashboard from '@/components/SecurityDashboard';
 import ExportInstructions from '@/components/ExportInstructions';
 import RandomPasswordGenerator from '@/components/RandomPasswordGenerator';
-import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ArrowUpTrayIcon, 
   ArrowDownTrayIcon, 
@@ -26,89 +26,6 @@ import {
   QuestionMarkCircleIcon,
   SparklesIcon
 } from '@heroicons/react/24/outline';
-
-const CursorFollower = () => {
-  const cursorX = useMotionValue(-100);
-  const cursorY = useMotionValue(-100);
-  const [isHovering, setIsHovering] = useState(false);
-  const [isClicking, setIsClicking] = useState(false);
-  
-  const springConfig = { damping: 40, stiffness: 300, mass: 0.8 };
-  const cursorXSpring = useSpring(cursorX, springConfig);
-  const cursorYSpring = useSpring(cursorY, springConfig);
-  const cursorScale = useSpring(1, springConfig);
-  const cursorRadius = useSpring(9999, springConfig);
-
-  useEffect(() => {
-    const moveCursor = (e: MouseEvent) => {
-      cursorX.set(e.clientX - 8);
-      cursorY.set(e.clientY - 8);
-    };
-
-    const handleMouseOver = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.tagName === 'BUTTON' || target.closest('button') || 
-          target.tagName === 'A' || target.closest('a') ||
-          target.tagName === 'INPUT' || target.closest('input') ||
-          target.classList.contains('cursor-pointer') || target.closest('.cursor-pointer')) {
-        setIsHovering(true);
-        cursorScale.set(3);
-        cursorRadius.set(8);
-      }
-    };
-
-    const handleMouseOut = () => {
-      setIsHovering(false);
-      cursorScale.set(1);
-      cursorRadius.set(9999);
-    };
-
-    const handleMouseDown = () => {
-      setIsClicking(true);
-      // Scale down to 50% of current size when clicking
-      cursorScale.set(isHovering ? 1.0 : 0.5);
-    };
-
-    const handleMouseUp = () => {
-      setIsClicking(false);
-      // Return to normal size
-      cursorScale.set(isHovering ? 3 : 1);
-    };
-
-    window.addEventListener('mousemove', moveCursor);
-    document.addEventListener('mouseover', handleMouseOver);
-    document.addEventListener('mouseout', handleMouseOut);
-    document.addEventListener('mousedown', handleMouseDown);
-    document.addEventListener('mouseup', handleMouseUp);
-
-    return () => {
-      window.removeEventListener('mousemove', moveCursor);
-      document.removeEventListener('mouseover', handleMouseOver);
-      document.removeEventListener('mouseout', handleMouseOut);
-      document.removeEventListener('mousedown', handleMouseDown);
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [isHovering]); // Added isHovering to dependencies since we use it in the handlers
-
-  return (
-    <motion.div
-      className="pointer-events-none fixed inset-0 z-50 mix-blend-difference"
-      style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
-    >
-      <motion.div
-        className="w-4 h-4 bg-white"
-        style={{
-          position: 'absolute',
-          left: cursorXSpring,
-          top: cursorYSpring,
-          borderRadius: cursorRadius,
-          scale: cursorScale,
-          transition: 'border-radius 0.5s ease',
-        }}
-      />
-    </motion.div>
-  );
-};
 
 export default function Home() {
   const [passwordGroups, setPasswordGroups] = useState<PasswordGroup[]>([]);
@@ -219,7 +136,6 @@ export default function Home() {
 
   return (
     <main className="min-h-screen">
-      <CursorFollower />
       <div className="relative bg-gradient-to-b from-blue-600 via-blue-700 to-blue-900 text-white overflow-hidden">
         {/* Background pattern */}
         <motion.div 
