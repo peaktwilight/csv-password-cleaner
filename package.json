@@ -45,6 +45,9 @@
     "react": "^18",
     "react-dom": "^18"
   },
+  "overrides": {
+    "minimatch": ">=10.0.0"
+  },
   "devDependencies": {
     "@types/node": "^20",
     "@types/papaparse": "^5.3.14",
