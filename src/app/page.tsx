@@ -223,7 +223,7 @@ export default function Home() {
                 </div>
 
                 <a
-                  href="https://github.com/dreamlabs-ch/csv-password-cleaner"
+                  href="https://github.com/peaktwilight/csv-password-cleaner"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group inline-flex items-center gap-2 px-6 py-2.5 bg-white/10 backdrop-blur-sm rounded-full hover:bg-white/20 transition-all duration-200 border border-white/20"
@@ -476,7 +476,7 @@ export default function Home() {
                       </div>
                       <div className="flex gap-3">
                         <a
-                          href="https://github.com/dreamlabs-ch/csv-password-cleaner"
+                          href="https://github.com/peaktwilight/csv-password-cleaner"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/20 font-medium"

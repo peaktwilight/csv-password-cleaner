@@ -74,7 +74,7 @@ export const metadata: Metadata = {
     'trustworthy': 'open-source',
     'security-level': 'military-grade',
     'privacy-level': 'zero-trust',
-    'github-repo': 'https://github.com/dreamlabs-ch/csv-password-cleaner'
+    'github-repo': 'https://github.com/peaktwilight/csv-password-cleaner'
   }
 };
 

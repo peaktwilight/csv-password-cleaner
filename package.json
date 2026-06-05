@@ -23,12 +23,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dreamlabs-ch/csv-password-cleaner.git"
+    "url": "https://github.com/peaktwilight/csv-password-cleaner.git"
   },
   "bugs": {
-    "url": "https://github.com/dreamlabs-ch/csv-password-cleaner/issues"
+    "url": "https://github.com/peaktwilight/csv-password-cleaner/issues"
   },
-  "homepage": "https://github.com/dreamlabs-ch/csv-password-cleaner#readme",
+  "homepage": "https://github.com/peaktwilight/csv-password-cleaner#readme",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
