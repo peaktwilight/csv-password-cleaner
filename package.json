@@ -36,28 +36,29 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@headlessui/react": "^1.7.18",
-    "@heroicons/react": "^2.1.1",
-    "critters": "^0.0.23",
-    "framer-motion": "^12.4.10",
-    "next": "^14.2.35",
-    "papaparse": "^5.4.1",
-    "react": "^18",
-    "react-dom": "^18"
+    "@headlessui/react": "^2.2.10",
+    "@heroicons/react": "^2.2.0",
+    "critters": "^0.0.25",
+    "framer-motion": "^12.42.2",
+    "next": "^16.2.10",
+    "papaparse": "^5.5.4",
+    "react": "^19",
+    "react-dom": "^19"
   },
   "overrides": {
     "minimatch": ">=10.0.0"
   },
   "devDependencies": {
-    "@types/node": "^20",
-    "@types/papaparse": "^5.3.14",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "autoprefixer": "^10.4.20",
-    "eslint": "^8",
-    "eslint-config-next": "14.1.0",
-    "postcss": "^8.5.3",
-    "tailwindcss": "^3.4.17",
-    "typescript": "^5"
+    "@tailwindcss/postcss": "^4.3.2",
+    "@types/node": "^26",
+    "@types/papaparse": "^5.5.2",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "autoprefixer": "^10.5.2",
+    "eslint": "^10",
+    "eslint-config-next": "16.2.10",
+    "postcss": "^8.5.16",
+    "tailwindcss": "^4.3.2",
+    "typescript": "^6"
   }
 }
