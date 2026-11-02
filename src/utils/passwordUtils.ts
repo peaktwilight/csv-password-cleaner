@@ -70,10 +70,7 @@ export const groupPasswordsByDomain = (entries: PasswordEntry[]): PasswordGroup[
     }));
 };
 
-export const exportToCSV = (entries: PasswordEntry[]): string => {
-  const filteredEntries = entries.filter(entry => entry.status !== 'delete');
-  return Papa.unparse(filteredEntries);
-};
+
 
 export const analyzePasswordSecurity = (entries: PasswordEntry[]): SecurityAnalysis => {
   const reusedPasswords = new Map<string, PasswordEntry[]>();
