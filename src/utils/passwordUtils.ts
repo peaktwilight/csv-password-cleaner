@@ -72,7 +72,15 @@ export const groupPasswordsByDomain = (entries: PasswordEntry[]): PasswordGroup[
 
 export const exportToCSV = (entries: PasswordEntry[]): string => {
   const filteredEntries = entries.filter(entry => entry.status !== 'delete');
-  return Papa.unparse(filteredEntries);
+  const safeEntries = filteredEntries.map(entry =>
+    Object.fromEntries(Object.entries(entry).map(([key, value]) => [
+      key,
+      typeof value === 'string' && /^[\t\r\n ]*[=+\-@]/.test(value)
+        ? `'${value}`
+        : value
+    ]))
+  );
+  return Papa.unparse(safeEntries);
 };
 
 export const analyzePasswordSecurity = (entries: PasswordEntry[]): SecurityAnalysis => {
