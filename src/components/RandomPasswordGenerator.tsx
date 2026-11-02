@@ -138,7 +138,16 @@ export default function RandomPasswordGenerator() {
     const interval = setInterval(() => {
       tempPassword = Array(options.length)
         .fill(0)
-        .map(() => chars.charAt(Math.floor(Math.random() * chars.length)))
+        .map(() => {
+          const max = Math.floor(0x100000000 / chars.length) * chars.length;
+          const random = new Uint32Array(1);
+          let value: number;
+          do {
+            crypto.getRandomValues(random);
+            value = random[0];
+          } while (value >= max);
+          return chars.charAt(value % chars.length);
+        })
         .join('');
       setPassword(tempPassword);
       
