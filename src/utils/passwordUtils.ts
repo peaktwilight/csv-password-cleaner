@@ -75,6 +75,18 @@ export const exportToCSV = (entries: PasswordEntry[]): string => {
   return Papa.unparse(filteredEntries);
 };
 
+export const exportToSpreadsheetSafeCSV = (entries: PasswordEntry[]): string => {
+  const filteredEntries = entries
+    .filter(entry => entry.status !== 'delete')
+    .map(entry => Object.fromEntries(
+      Object.entries(entry).map(([key, value]) => [
+        key,
+        typeof value === 'string' && /^[\t\r\n ]*[=+@-]/.test(value) ? `'${value}` : value,
+      ])
+    ));
+  return Papa.unparse(filteredEntries);
+};
+
 export const analyzePasswordSecurity = (entries: PasswordEntry[]): SecurityAnalysis => {
   const reusedPasswords = new Map<string, PasswordEntry[]>();
   const weakPasswords: PasswordEntry[] = [];
