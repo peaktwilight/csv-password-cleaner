@@ -237,29 +237,14 @@ const PasswordEntryItem = memo(({
 
 PasswordEntryItem.displayName = 'PasswordEntryItem';
 
-// Domain icon/favicon component
-const DomainIcon = ({ domain }: { domain: string }) => {
-  const [error, setError] = useState(false);
-  
-  if (error) {
-    return (
-      <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center">
-        <span className="text-xs text-gray-500 uppercase font-bold">
-          {domain.charAt(0)}
-        </span>
-      </div>
-    );
-  }
-  
-  return (
-    <img 
-      src={`https://www.google.com/s2/favicons?domain=${domain}&sz=64`}
-      alt={`${domain} icon`}
-      className="w-6 h-6 rounded-full"
-      onError={() => setError(true)}
-    />
-  );
-};
+// Domain icon rendered locally to avoid disclosing imported domains to a third party.
+const DomainIcon = ({ domain }: { domain: string }) => (
+  <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center" aria-hidden="true">
+    <span className="text-xs text-gray-500 uppercase font-bold">
+      {domain.charAt(0)}
+    </span>
+  </div>
+);
 
 // Group header with stats, sorting and filtering options
 const GroupHeader = memo(({ 
