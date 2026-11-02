@@ -470,7 +470,7 @@ export default function PasswordList({ groups, onUpdateStatus, onBulkUpdateStatu
 
   const visitSite = useCallback((url: string) => {
     const fullUrl = url.startsWith('http') ? url : `https://${url}`;
-    window.open(fullUrl, '_blank');
+    window.open(fullUrl, '_blank', 'noopener,noreferrer');
   }, []);
 
   const togglePasswordVisibility = useCallback((groupUrl: string, index: number) => {
