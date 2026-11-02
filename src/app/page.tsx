@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import type { PasswordEntry, PasswordGroup } from '@/types/password';
-import { parseCSV, groupPasswordsByDomain, exportToCSV, analyzePasswordSecurity, normalizeUrl } from '@/utils/passwordUtils';
+import { parseCSV, groupPasswordsByDomain, exportToCSV, exportToSpreadsheetSafeCSV, analyzePasswordSecurity, normalizeUrl } from '@/utils/passwordUtils';
 import PasswordList from '@/components/PasswordList';
 import SecurityDashboard from '@/components/SecurityDashboard';
 import ExportInstructions from '@/components/ExportInstructions';
@@ -92,19 +92,26 @@ export default function Home() {
     }
   };
 
-  const handleExport = () => {
-    const allEntries = passwordGroups.flatMap(group => group.entries);
-    const csv = exportToCSV(allEntries);
-    
+  const downloadCSV = (csv: string, filename: string) => {
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'cleaned_passwords.csv';
+    a.download = filename;
     document.body.appendChild(a);
     a.click();
     window.URL.revokeObjectURL(url);
     document.body.removeChild(a);
+  };
+
+  const handleExport = () => {
+    const allEntries = passwordGroups.flatMap(group => group.entries);
+    downloadCSV(exportToSpreadsheetSafeCSV(allEntries), 'cleaned_passwords.csv');
+  };
+
+  const handleExactExport = () => {
+    const allEntries = passwordGroups.flatMap(group => group.entries);
+    downloadCSV(exportToCSV(allEntries), 'password_manager_import.csv');
   };
 
   const updatePasswordStatus = (groupUrl: string, entryIndex: number, status: PasswordEntry['status']) => {
@@ -574,7 +581,15 @@ export default function Home() {
                     className="inline-flex items-center px-5 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-300 hover:scale-105 shadow-sm hover:shadow-lg hover:shadow-blue-500/20 font-medium"
                   >
                     <ArrowDownTrayIcon className="w-5 h-5 mr-2 transition-transform duration-300 group-hover:rotate-12" />
-                    Export Cleaned CSV
+                    Export Spreadsheet-Safe CSV
+                  </button>
+                  <button
+                    onClick={handleExactExport}
+                    title="Exact-value export for password-manager import; do not open in a spreadsheet."
+                    className="inline-flex items-center px-5 py-2.5 bg-gray-600 text-white rounded-xl hover:bg-gray-700 transition-all duration-300 hover:scale-105 shadow-sm font-medium"
+                  >
+                    <ArrowDownTrayIcon className="w-5 h-5 mr-2" />
+                    Exact-Value Export (not for spreadsheets)
                   </button>
                 </div>
               </div>
